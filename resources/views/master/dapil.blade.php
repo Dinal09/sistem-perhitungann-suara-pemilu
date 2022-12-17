@@ -23,7 +23,7 @@
                                     <tr>
                                         <th>Aksi</th>
                                         <th>No</th>
-                                        <th>Deskripsi</th>
+                                        <th>Nama</th>
                                         <th>Tanggal</th>
                                     </tr>
                                 </thead>
@@ -42,7 +42,7 @@
                                             </div>
                                         </td>
                                         <td> {{ $idx + 1 }} </td>
-                                        <td> {{ $d->deskripsi }} </td>
+                                        <td> {{ $d->nama }} </td>
                                         <td> {{ is_null($d->created_at) ? '-' : date('d-m-Y H:i:s', strtotime($d->created_at)) }}
                                         </td>
                                     </tr>
@@ -72,8 +72,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Deskripsi</label>
-                                        <textarea class="form-control autogrow" name="deskripsi" placeholder="Masukkan Deskripsi {{ $title }}"
+                                        <label for="field-7" class="control-label">Nama</label>
+                                        <textarea class="form-control autogrow" name="nama" placeholder="Masukkan nama {{ $title }}"
                                             style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" required></textarea>
                                     </div>
                                 </div>
@@ -106,10 +106,9 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Deskripsi</label>
+                                        <label for="field-7" class="control-label">nama</label>
                                         <input type="hidden" id="ubah-id" name="id">
-                                        <textarea class="form-control autogrow" name="deskripsi" id="ubah-deskripsi"
-                                            placeholder="Masukkan Deskripsi {{ $title }}"
+                                        <textarea class="form-control autogrow" name="nama" id="ubah-nama" placeholder="Masukkan Nama {{ $title }}"
                                             style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" required></textarea>
                                     </div>
                                 </div>
@@ -128,7 +127,6 @@
     </div>
 @endsection
 
-
 @section('add-header')
     <link href="{{ url('/ubold/assets/plugins/custombox/css/custombox.css') }}" rel="stylesheet">
 @endsection
@@ -138,7 +136,7 @@
         $('.btn-ubah').click(function() {
             let id = $(this).data('id')
 
-            $.post('/jenis-suara/get-by-id?id=' + id, {
+            $.post('/dapil/get-by-id?id=' + id, {
                 '_token': '{{ csrf_token() }}',
                 idJenis: id
             }).done(function(output) {
@@ -148,7 +146,7 @@
                         result.pesan
                     )
 
-                    $('#ubah-deskripsi').val(result.data.deskripsi)
+                    $('#ubah-nama').val(result.data.nama)
                     $('#ubah-id').val(result.data.id)
                 } else [
                     $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',

@@ -2,29 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisSuara;
+use App\Models\Kecamatan;
+use App\Models\Dapil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class JenisSuaraController extends Controller
+class KecamatanController extends Controller
 {
-    public $title = 'Jenis Suara';
-    public $link = 'jenis-suara';
+    public $title = 'Kecamatan';
+    public $link = 'kecamatan';
 
     public function index()
     {
-        $data = JenisSuara::get();
+        $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'dapil.nama AS dapil_nama'])
+            ->leftJoin('dapil', 'dapil.id', '=', 'kecamatan.id_dapil')->get();
+        $dapil = Dapil::get();
         return view('master.'.$this->link, [
             'data' => $data,
+            'dapil' => $dapil,
+
             'title' => $this->title,
             'link' => $this->link,
-            'explain' => 'Menu yang berisi data jenis suara pada perhitungan suara, Terdapat Juga Fitur Tambah, Update dan Hapus'
+            'explain' => 'Menu yang berisi data '.$this->link.', Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }
 
     public function getById(Request $request){
         $id = $request->id;
-        $data = JenisSuara::find($id);
+        $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'dapil.nama AS dapil_nama', 'dapil.id AS dapil_id'])
+            ->leftJoin('dapil', 'dapil.id', '=', 'kecamatan.id_dapil')->where('kecamatan.id', $id)->first();
 
         if($data){
             return json_encode([
@@ -43,14 +49,14 @@ class JenisSuaraController extends Controller
     public function create(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'deskripsi' => 'required',
+            'nama' => 'required',
         ]);
         if ($validate->fails()) {
             return redirect()->back()->with('error', $validate->errors()->first());
         }
         $data = $request->all();
         unset($data['_token']);
-        JenisSuara::create($data);
+        Kecamatan::create($data);
 
         return redirect()->back()->with('sukses', $this->title.' Berhasil Ditambahkan...!!');
     }
@@ -61,14 +67,14 @@ class JenisSuaraController extends Controller
         $data = $request->all();
         unset($data['_token']);
         unset($data['id']);
-        JenisSuara::where('id', $id)->update($data);
+        Kecamatan::where('id', $id)->update($data);
 
         return redirect()->back()->with('sukses', $this->title.' Berhasil Diedit...!!');
     }
 
     public function delete($id)
     {
-        JenisSuara::where('id', $id)->delete();
+        Kecamatan::where('id', $id)->delete();
 
         return redirect()->back()->with('sukses', $this->title.' Berhasil Dihapus...!!');
     }

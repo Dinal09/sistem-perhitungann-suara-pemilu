@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisSuara;
+use App\Models\Dapil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class JenisSuaraController extends Controller
+class DapilController extends Controller
 {
-    public $title = 'Jenis Suara';
-    public $link = 'jenis-suara';
+    public $title = 'Dapil';
+    public $link = 'dapil';
 
     public function index()
     {
-        $data = JenisSuara::get();
+        $data = Dapil::get();
         return view('master.'.$this->link, [
             'data' => $data,
             'title' => $this->title,
             'link' => $this->link,
-            'explain' => 'Menu yang berisi data jenis suara pada perhitungan suara, Terdapat Juga Fitur Tambah, Update dan Hapus'
+            'explain' => 'Menu yang berisi data daerah pilih, Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }
 
     public function getById(Request $request){
         $id = $request->id;
-        $data = JenisSuara::find($id);
+        $data = Dapil::find($id);
 
         if($data){
             return json_encode([
@@ -43,14 +43,14 @@ class JenisSuaraController extends Controller
     public function create(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'deskripsi' => 'required',
+            'nama' => 'required',
         ]);
         if ($validate->fails()) {
             return redirect()->back()->with('error', $validate->errors()->first());
         }
         $data = $request->all();
         unset($data['_token']);
-        JenisSuara::create($data);
+        Dapil::create($data);
 
         return redirect()->back()->with('sukses', $this->title.' Berhasil Ditambahkan...!!');
     }
@@ -61,14 +61,14 @@ class JenisSuaraController extends Controller
         $data = $request->all();
         unset($data['_token']);
         unset($data['id']);
-        JenisSuara::where('id', $id)->update($data);
+        Dapil::where('id', $id)->update($data);
 
         return redirect()->back()->with('sukses', $this->title.' Berhasil Diedit...!!');
     }
 
     public function delete($id)
     {
-        JenisSuara::where('id', $id)->delete();
+        Dapil::where('id', $id)->delete();
 
         return redirect()->back()->with('sukses', $this->title.' Berhasil Dihapus...!!');
     }

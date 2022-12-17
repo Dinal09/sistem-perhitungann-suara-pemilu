@@ -2,40 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisSuara;
+use App\Models\SuaraAbu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class JenisSuaraController extends Controller
+class SuaraAbuController extends Controller
 {
-    public $title = 'Jenis Suara';
-    public $link = 'jenis-suara';
+    public $title = 'Suara Abu-abu';
+    public $link = 'suara-abu';
 
     public function index()
     {
-        $data = JenisSuara::get();
-        return view('master.'.$this->link, [
+        $data = SuaraAbu::get();
+        return view('master.' . $this->link, [
             'data' => $data,
             'title' => $this->title,
             'link' => $this->link,
-            'explain' => 'Menu yang berisi data jenis suara pada perhitungan suara, Terdapat Juga Fitur Tambah, Update dan Hapus'
+            'explain' => 'Menu yang berisi data suara abu-abu, Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }
 
-    public function getById(Request $request){
+    public function getById(Request $request)
+    {
         $id = $request->id;
-        $data = JenisSuara::find($id);
+        $data = SuaraAbu::find($id);
 
-        if($data){
+        if ($data) {
             return json_encode([
                 'kode' => 200,
-                'pesan' => 'Data '.$this->title.' Berhasil Ditemukan...!!',
+                'pesan' => 'Data ' . $this->title . ' Berhasil Ditemukan...!!',
                 'data' => $data
             ]);
-        }else{
+        } else {
             return json_encode([
                 'kode' => 400,
-                'pesan' => 'Data '.$this->title.' Tidak Ditemukan...!!',
+                'pesan' => 'Data ' . $this->title . ' Tidak Ditemukan...!!',
             ]);
         }
     }
@@ -50,9 +51,9 @@ class JenisSuaraController extends Controller
         }
         $data = $request->all();
         unset($data['_token']);
-        JenisSuara::create($data);
+        SuaraAbu::create($data);
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Ditambahkan...!!');
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
     }
 
     public function update(Request $request)
@@ -61,15 +62,15 @@ class JenisSuaraController extends Controller
         $data = $request->all();
         unset($data['_token']);
         unset($data['id']);
-        JenisSuara::where('id', $id)->update($data);
+        SuaraAbu::where('id', $id)->update($data);
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Diedit...!!');
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Diedit...!!');
     }
 
     public function delete($id)
     {
-        JenisSuara::where('id', $id)->delete();
+        SuaraAbu::where('id', $id)->delete();
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Dihapus...!!');
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Dihapus...!!');
     }
 }

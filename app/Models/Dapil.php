@@ -5,14 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JenisSuara extends Model
+class Dapil extends Model
 {
     use HasFactory;
-    protected $table = 'jenis_suara';
+    protected $table = 'dapil';
     protected $fillable = [
-        'deskripsi',
+        'nama',
         'created_at',
         'updated_at'
     ];
     public $timestamp = TRUE;
+
+
+    public function kecamatan()
+    {
+        return $this->hasMany(Kecamatan::class, 'id_dapil', 'id');
+    }
 }

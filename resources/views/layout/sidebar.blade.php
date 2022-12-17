@@ -13,7 +13,6 @@
                 <li class="text-muted menu-title">Data Master</li>
                 <li class="has_sub">
                     <a href="/pengguna" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Pengguna </span>
                     </a>
@@ -22,10 +21,10 @@
                     <a href="javascript:void(0);" class="waves-effect"><i class="ti-map-alt"></i> <span>
                             Daerah </span> <span class="menu-arrow"></span> </a>
                     <ul class="list-unstyled">
-                        <li><a href="ui-buttons.html">Dapil</a></li>
-                        <li><a href="ui-loading-buttons.html">Kecamatan</a></li>
-                        <li><a href="ui-panels.html">Desa</a></li>
-                        <li><a href="ui-portlets.html">TPS</a></li>
+                        <li><a href="/dapil">Dapil</a></li>
+                        <li><a href="/kecamatan">Kecamatan</a></li>
+                        <li><a href="/desa">Desa</a></li>
+                        <li><a href="/tps">TPS</a></li>
                     </ul>
                 </li>
                 <li class="has_sub">
@@ -35,7 +34,7 @@
                     </a>
                 </li>
                 <li class="has_sub">
-                    <a href="javascript:void(0);" class="waves-effect">
+                    <a href="/suara-abu" class="waves-effect">
                         <i class="ti-package"></i>
                         <span>Suara Abu-abu </span>
                     </a>

@@ -5,14 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JenisSuara extends Model
+class Tps extends Model
 {
     use HasFactory;
-    protected $table = 'jenis_suara';
+    protected $table = 'tps';
     protected $fillable = [
-        'deskripsi',
+        'id_desa',
+        'nama',
+        'berkas_c1',
+        'rekap_mandiri',
         'created_at',
         'updated_at'
     ];
     public $timestamp = TRUE;
+
+
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class, 'id_desa', 'id');
+    }
 }

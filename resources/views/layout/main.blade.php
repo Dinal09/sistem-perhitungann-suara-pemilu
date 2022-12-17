@@ -2,9 +2,9 @@
 <html>
 
 <head>
-    @include('layout.header')
-
     @yield('add-header')
+
+    @include('layout.header')
 </head>
 
 <body class="fixed-left">
