@@ -6,19 +6,17 @@
             <div class="card-box">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h4 class="m-t-0 header-title"><b>Tabel {{ $title }} </b></h4>
-                        <p class="text-muted font-13">
-                            {{ $explain }}</p>
-
-                        <div class="p-20">
-
+                        <div class="card-box table-responsive">
+                            <h4 class="m-t-0 header-title"><b>Tabel {{ $title }} </b></h4>
+                            <p class="text-muted font-13 m-b-30">
+                                {{ $explain }}</code>.
+                            </p>
                             <a href="#custom-modal-tambah" class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
                                 data-toggle="modal" data-target="#modal-tambah">
                                 <span class="btn-label"><i class="fa fa-plus"></i></span>
                                 Tambah Data
                             </a>
-
-                            <table class="table table-striped m-0">
+                            <table id="datatable" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Aksi</th>
@@ -109,7 +107,7 @@
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">E-mail</label>
                                         <input type="email" class="form-control" name="email"
-                                            placeholder="Masukkan e-mail {{ $title }}" required>
+                                            placeholder="Masukkan e-mail {{ $title }}">
                                         <sup>*Boleh Kosong</sup>
                                     </div>
                                     <div class="form-group no-margin">

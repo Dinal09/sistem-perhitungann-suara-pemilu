@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Users;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
@@ -85,7 +86,7 @@ class UsersController extends Controller
             $data = $request->all();
 
             $data['foto'] = $linkFoto[3];
-            $data['password'] = md5($request->password);
+            $data['password'] = Hash::make($request->password);
             unset($data['_token']);
             Users::create($data);
 
@@ -111,7 +112,7 @@ class UsersController extends Controller
 
         $id = $request->id;
         if (isset($request->password)) {
-            $data['password'] = md5($request->password);
+            $data['password'] = Hash::make($request->password);
             $notif = 'Berhasil Mengubah Foto Pengguna';
         } elseif (isset($request->foto)) {
             $simpan = $request->file('foto')->store('/public/data-aplikasi/foto-user');

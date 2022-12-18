@@ -24,4 +24,9 @@ class Tps extends Model
     {
         return $this->belongsTo(Desa::class, 'id_desa', 'id');
     }
+
+    public function pemilih()
+    {
+        return $this->hasMany(Pemilih::class, 'id_tps', 'id');
+    }
 }
