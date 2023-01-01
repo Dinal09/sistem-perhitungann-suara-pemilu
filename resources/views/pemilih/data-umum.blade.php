@@ -43,10 +43,10 @@
                                                     data-id="{{ $d->id }}" data-toggle="modal"
                                                     data-target="#modal-lihat" title="Lihat Detail Pemilih"><i
                                                         class="ti-eye"></i></button>
-                                                <button class="btn btn-warning waves-effect btn-ubah-password"
+                                                <button class="btn btn-warning waves-effect btn-pilih-tps"
                                                     data-id="{{ $d->id }}" data-toggle="modal"
-                                                    data-target="#modal-password" title="Ubah Password"><i
-                                                        class="ti-key"></i></button>
+                                                    data-target="#modal-pilih-tps" title="Ubah Password"><i
+                                                        class="ti-map-alt"></i></button>
                                                 <a href="/<?= $link ?>/hapus/{{ $d->id }}"
                                                     class="btn btn-danger waves-effect ladda-button"
                                                     data-style="slide-right" title="Hapus Data"><i class="ti-trash"></i></a>
@@ -75,7 +75,6 @@
     </div>
 
     {{-- Modal Tambah --}}
-
     <div id="modal-tambah" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="full-width-modalLabel"
         aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-full">
@@ -359,83 +358,45 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">Ubah Foto {{ $title }} </h4>
+                    <h4 class="modal-title" id="myModalLabel">Lihat {{ $title }} </h4>
                 </div>
                 <div class="modal-body">
-                    <div class="profile-detail card-box">
-                        <div>
-                            <img src="assets/images/users/avatar-2.jpg" id="lihat-data-foto" class="img-circle"
-                                alt="profile-image">
-                            <ul class="list-inline status-list m-t-20">
-                                <li>
-                                    <h3 class="text-primary m-b-5">456</h3>
-                                    <p class="text-muted">Dapil</p>
-                                </li>
-                                <li>
-                                    <h3 class="text-success m-b-5">5864</h3>
-                                    <p class="text-muted">Kecamatan</p>
-                                </li>
-                                <li>
-                                    <h3 class="text-success m-b-5">5864</h3>
-                                    <p class="text-muted">Desa</p>
-                                </li>
-                                <li>
-                                    <h3 class="text-success m-b-5">5864</h3>
-                                    <p class="text-muted">TPS</p>
-                                </li>
-                            </ul>
+                    <div class="widget-profile-one">
+                        <div class="card-box m-b-0 b-0 bg-primary p-lg text-center">
+                            <div class="m-b-30">
+                                <input type="hidden" id="lihat-data-id">
+                                <h3 class="text-white m-b-5" id="lihat-data-nama"></h3>
+                                <small id="lihat-data-ttl"></small>
+                            </div>
+                            <img id="lihat-data-foto" src="" class="img-circle thumb-lg" alt="profile">
+                            <div class="m-t-10">
+                                <span><b>TPS</b> <span id="lihat-data-tps"></span> </span> |
+                                <span><b>Desa</b> <span id="lihat-data-desa"></span> </span> |
+                                <span><b>Kecamatan</b> <span id="lihat-data-kecamatan"></span> </span> |
+                                <span><b>Dapil</b> <span id="lihat-data-dapil"></span> </span>
+                            </div>
+                        </div>
+                        <div class="card-box">
+                            <div class="row">
+                                <div class="col-lg-6"><b>Nomor KK</b></div>
+                                <div class="col-lg-6 text-right mb-2" id="lihat-data-nomor-kk"></div>
+                                <div class="col-lg-6"><b>Nomor NIK</b></div>
+                                <div class="col-lg-6 text-right mb-2" id="lihat-data-nomor-nik"></div>
+                                <div class="col-lg-6"><b>Nomor HP</b></div>
+                                <div class="col-lg-6 text-right mb-2" id="lihat-data-nomor-hp"></div>
+                                <div class="col-lg-6"><b>Alamat</b></div>
+                                <div class="col-lg-6 text-right mb-2" id="lihat-data-nomor-alamat"></div>
+                            </div>
                             <hr>
-                            <div class="text-left">
-                                <table>
-                                    <tr>
-                                        <td style="width: 15%">
-                                            <p class="text-muted font-13"><strong>Nama</strong></p>
-                                        </td>
-                                        <td style="width: 35%">
-                                            <p class="text-muted font-13"><span class="m-l-15">: Johnathan
-                                                    Deo</span></p>
-                                        </td>
-                                        <td style="width: 15%">
-                                            <p class="text-muted font-13"><strong>Nomor KK</strong></p>
-                                        </td>
-                                        <td style="width: 35%">
-                                            <p class="text-muted font-13"><span class="m-l-15">: Johnathan
-                                                    Deo</span></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 15%">
-                                            <p class="text-muted font-13"><strong>TTL</strong></p>
-                                        </td>
-                                        <td style="width: 35%">
-                                            <p class="text-muted font-13"><span class="m-l-15">: Johnathan
-                                                    Deo</span></p>
-                                        </td>
-                                        <td style="width: 15%">
-                                            <p class="text-muted font-13"><strong>Nomor NIK</strong></p>
-                                        </td>
-                                        <td style="width: 35%">
-                                            <p class="text-muted font-13"><span class="m-l-15">: Johnathan
-                                                    Deo</span></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 15%">
-                                            <p class="text-muted font-13"><strong>Alamat</strong></p>
-                                        </td>
-                                        <td style="width: 35%">
-                                            <p class="text-muted font-13"><span class="m-l-15">: Johnathan
-                                                    Deo</span></p>
-                                        </td>
-                                        <td style="width: 15%">
-                                            <p class="text-muted font-13"><strong>Nomor HP</strong></p>
-                                        </td>
-                                        <td style="width: 35%">
-                                            <p class="text-muted font-13"><span class="m-l-15">: Johnathan
-                                                    Deo</span></p>
-                                        </td>
-                                    </tr>
-                                </table>
+                            <div class="roe">
+                                <button type="button" class="btn btn-success waves-effect waves-light col-lg-6 m-1"
+                                    onclick="lihatKtp()" data-toggle="modal" data-target="#modal-lihat-foto">Lihat
+                                    Foto
+                                    KTP</button>
+                                <button type="button" class="btn btn-info waves-effect waves-light col-lg-6 m-1"
+                                    onclick="lihatKk()" data-toggle="modal" data-target="#modal-lihat-foto">Lihat
+                                    Foto
+                                    KK</button>
                             </div>
                         </div>
                     </div>
@@ -443,6 +404,70 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal Pilih TPS --}}
+    <div id="modal-pilih-tps" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Pilih TPS</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/<?= $link ?>/ubah" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="field-7" class="control-label">Kecamatan</label>
+                                    <input type="hidden" id="pilih-tps-id" name="id">
+                                    <select class="form-control select2" id="id_tps" name="id_tps" required>
+                                        <option>--- Pilih TPS ---</option>
+                                        <?php foreach($desa as $d): ?>
+                                        <optgroup label=" {{ $d->nama }} ">
+                                            <?php foreach ($d->tps as $t): ?>
+                                            <option value={{ $t->id }}> {{ $t->nama }} </option>
+                                            <?php endforeach ?>
+                                        </optgroup>
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="ladda-button btn btn-primary" data-style="expand-left">
+                                Submit
+                            </button>
+                            <button type="button" class="btn btn-default waves-effect"
+                                data-dismiss="modal">Tutup</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Lihat Foto --}}
+    <div id="modal-lihat-foto" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="full-width-modalLabel"
+        aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-full">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Lihat Foto</h4>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="modal-body">
+                        <img src="" id="lihat-foto-foto" alt="" style="width: 100%">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal -->
 
     {{-- Modal Ubah Password --}}
     <div id="modal-password" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -484,6 +509,15 @@
 @endsection
 
 @section('add-header')
+    <link href="{{ url('/ubold/assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css') }}" rel="stylesheet" />
+    <link href="{{ url('/ubold/assets/plugins/switchery/css/switchery.min.css') }}" rel="stylesheet" />
+    <link href="{{ url('/ubold/assets/plugins/multiselect/css/multi-select.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('/ubold/assets/plugins/custombox/css/custombox.css') }}" rel="stylesheet">
+    <link href="{{ url('/ubold/assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('/ubold/assets/plugins/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" />
+    <link href="{{ url('/ubold/assets/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css') }}"
+        rel="stylesheet" />
+
     <link href="{{ url('/ubold/assets/plugins/custombox/css/custombox.css') }}" rel="stylesheet">
     <link href="{{ url('/ubold/assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 
@@ -505,11 +539,25 @@
 @endsection
 
 @section('add-footer')
-    <script src="{{ url('/ubold/assets/plugins/select2/js/select2.min.js') }}" type="text/javascript"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/switchery/js/switchery.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/multiselect/js/jquery.multi-select.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/jquery-quicksearch/jquery.quicksearch.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
+
+    {{-- <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.mockjax.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/autocomplete/countries.js') }}"></script>
+    <script src="{{ url('/ubold/assets/pages/autocomplete.js') }}"></script> --}}
+
+    <script src="{{ url('/ubold/assets/pages/jquery.form-advanced.init.js') }}"></script>
 
     <script src="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.bootstrap.js') }}"></script>
-
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.buttons.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/buttons.bootstrap.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/jszip.min.js') }}"></script>
@@ -589,7 +637,7 @@
         $('.btn-lihat-data').click(function() {
             let id = $(this).data('id')
 
-            $.post('/data-umum/get-foto-by-id?id=' + id, {
+            $.post('/data-umum/get-data-by-id?id=' + id, {
                 '_token': '{{ csrf_token() }}',
                 idJenis: id
             }).done(function(output) {
@@ -598,9 +646,24 @@
                     $.Notification.autoHideNotify('success', 'top right', 'Berhasil...!!',
                         result.pesan
                     )
-
                     $('#lihat-data-foto').attr('src', result.foto)
-                    $('#ubah-foto-id').val(result.data.id)
+                    $('#lihat-data-nama').html(result.data.nama)
+                    $('#lihat-data-tps').html((result.hasOwnProperty('tps')) ? result.data.tps
+                        .nama : '-')
+                    $('#lihat-data-desa').html((result.hasOwnProperty('desa')) ? result.data.tps.desa.nama :
+                        '-')
+                    $('#lihat-data-kecamatan').html((result.hasOwnProperty('kecamatan')) ? result.data.tps
+                        .desa.kecamatan.nama : '-')
+                    $('#lihat-data-dapil').html((result.hasOwnProperty('dapil')) ? result.data.tps.desa
+                        .kecamatan.dapil.nama : '-')
+                    $('#lihat-data-ttl').html(result.data.tempat_lahir + ', ' + result.data.tanggal_lahir)
+
+                    $('#lihat-data-nomor-kk').html(result.data.no_kk)
+                    $('#lihat-data-nomor-nik').html(result.data.no_nik)
+                    $('#lihat-data-nomor-hp').html(result.data.no_hp)
+                    $('#lihat-data-alamat').html(result.data.alamat)
+
+                    $('#lihat-data-id').val(result.data.id)
                 } else [
                     $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
                         result.pesan
@@ -609,10 +672,10 @@
             })
         })
 
-        $('.btn-ubah-password').click(function() {
+        $('.btn-pilih-tps').click(function() {
             let id = $(this).data('id')
 
-            $.post('/pengguna/get-by-id?id=' + id, {
+            $.post('/data-umum/get-by-id?id=' + id, {
                 '_token': '{{ csrf_token() }}',
                 idJenis: id
             }).done(function(output) {
@@ -622,7 +685,10 @@
                         result.pesan
                     )
 
-                    $('#ubah-password-id').val(result.data.id)
+                    if (result.data.tps != null) {
+                        $('#get-data-by-id').val(result.data.tps.id)
+                    }
+                    $('#pilih-tps-id').val(result.data.id)
                 } else [
                     $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
                         result.pesan
@@ -630,5 +696,49 @@
                 ]
             })
         })
+
+        function lihatKtp() {
+            let idLihat = $('#lihat-data-id').val()
+            console.log(idLihat)
+            $.post('/data-umum/get-foto-by-id?id=' + idLihat + '&jenis=ktp', {
+                '_token': '{{ csrf_token() }}',
+                idJenis: idLihat
+            }).done(function(output) {
+                let result = $.parseJSON(output);
+                if (result.kode == 200) {
+                    $.Notification.autoHideNotify('success', 'top right', 'Berhasil...!!',
+                        result.pesan
+                    )
+
+                    $('#lihat-foto-foto').attr('src', result.foto)
+                } else [
+                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                        result.pesan
+                    )
+                ]
+            })
+        }
+
+        function lihatKk() {
+            let idLihat = $('#lihat-data-id').val()
+            console.log(idLihat)
+            $.post('/data-umum/get-foto-by-id?id=' + idLihat + '&jenis=kk', {
+                '_token': '{{ csrf_token() }}',
+                idJenis: idLihat
+            }).done(function(output) {
+                let result = $.parseJSON(output);
+                if (result.kode == 200) {
+                    $.Notification.autoHideNotify('success', 'top right', 'Berhasil...!!',
+                        result.pesan
+                    )
+
+                    $('#lihat-foto-foto').attr('src', result.foto)
+                } else [
+                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                        result.pesan
+                    )
+                ]
+            })
+        }
     </script>
 @endsection

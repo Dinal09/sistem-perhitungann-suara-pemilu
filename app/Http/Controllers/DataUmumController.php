@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Desa;
 use App\Models\Kecamatan;
 use App\Models\Pemilih;
+use App\Models\Tps;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,11 +17,13 @@ class DataUmumController extends Controller
     public function index()
     {
         $data = Pemilih::with('tps.desa.kecamatan.dapil')->get();
+        $desa = Desa::with('tps')->get();
 
         return view('pemilih.' . $this->link, [
             'data' => $data,
             'title' => $this->title,
             'link' => $this->link,
+            'desa' => $desa,
             'explain' => 'Menu yang berisi data semua pemilih yang memiliki hak suara, Terdapat Juga Fitur Tambah, Update, Hapus dan Export Ke berbagai
                             tipe file yang diinginkan'
         ]);
@@ -28,7 +32,7 @@ class DataUmumController extends Controller
     public function getById(Request $request)
     {
         $id = $request->id;
-        $data = Pemilih::find($id);
+        $data = Pemilih::with('tps.desa.kecamatan.dapil')->find($id);
 
         if ($data) {
             return json_encode([
@@ -45,10 +49,10 @@ class DataUmumController extends Controller
     }
 
 
-    public function getFotoById(Request $request)
+    public function getDataById(Request $request)
     {
         $id = $request->id;
-        $data = Pemilih::find($id);
+        $data = Pemilih::with('tps.desa.kecamatan.dapil')->find($id);
 
         if ($data) {
             return json_encode([
@@ -56,6 +60,31 @@ class DataUmumController extends Controller
                 'pesan' => 'Data ' . $this->title . ' Berhasil Ditemukan...!!',
                 'data' => $data,
                 'foto' => asset('storage/data-aplikasi/foto-pemilih/' . $data->foto)
+            ]);
+        } else {
+            return json_encode([
+                'kode' => 400,
+                'pesan' => 'Data ' . $this->title . ' Tidak Ditemukan...!!',
+            ]);
+        }
+    }
+
+    public function getFotoById(Request $request)
+    {
+        $id = $request->id;
+        $data = Pemilih::with('tps.desa.kecamatan.dapil')->find($id);
+
+        if ($request->jenis == 'ktp') {
+            $foto = asset('storage/data-aplikasi/foto-ktp/' . $data->foto_ktp);
+        } else if ($request->jenis == 'kk') {
+            $foto = asset('storage/data-aplikasi/foto-kk/' . $data->foto_kk);
+        }
+
+        if ($data) {
+            return json_encode([
+                'kode' => 200,
+                'pesan' => 'Data ' . $this->title . ' Berhasil Ditemukan...!!',
+                'foto' => $foto
             ]);
         } else {
             return json_encode([
@@ -110,15 +139,8 @@ class DataUmumController extends Controller
 
     public function update(Request $request)
     {
-
         $validate = Validator::make($request->all(), [
-            'no_nik' => 'required|unique:pemilih',
-            'no_kk' => 'required',
-            'nama' => 'required',
-            'tempat_lahir' => 'required',
-            'tanggal_lahir' => 'required',
-            'no_hp' => 'required',
-            'alamat' => 'required',
+            'no_nik' => 'unique:pemilih',
             'foto' => 'image|mimes:jpg,png,jpeg,svg|max:2048',
             'foto_ktp' => 'image|mimes:jpg,png,jpeg,svg|max:2048',
             'foto_kk' => 'image|mimes:jpg,png,jpeg,svg|max:2048',
@@ -145,6 +167,20 @@ class DataUmumController extends Controller
             $simpanFotoKK = $request->file('foto_kk')->store('/public/data-aplikasi/foto-kk');
             $linkFotoKK = explode('/', $simpanFotoKK);
             $data['foto'] = $linkFotoKK[3];
+        }
+        if (isset($request->id_tps)) {
+            $cek = Pemilih::find($request->id)->get()->toArray();
+
+            if (!is_null($cek[0]['id_tps'])) {
+                $desa1 = Tps::select(['tps.id_desa', 'desa.jumlah_penduduk'])->leftJoin('desa', 'tps.id_desa', '=', 'desa.id')
+                    ->where('tps.id', $cek[0]['id_tps'])->get()->toArray();
+                $ubahJumlah = ['jumlah_penduduk' => ($desa1[0]['jumlah_penduduk'] - 1)];
+                Desa::where('id', $desa1[0]['id_desa'])->update($ubahJumlah);
+            }
+            $desa2 = Tps::select(['tps.id_desa', 'desa.jumlah_penduduk'])->leftJoin('desa', 'tps.id_desa', '=', 'desa.id')
+                ->where('tps.id', $request->id_tps)->get()->toArray();
+            $ubahJumlah = ['jumlah_penduduk' => ($desa2[0]['jumlah_penduduk'] + 1)];
+            Desa::where('id', $desa2[0]['id_desa'])->update($ubahJumlah);
         }
 
         unset($data['_token']);

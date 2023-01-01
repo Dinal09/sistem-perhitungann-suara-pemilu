@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\JenisSuaraController;
 use App\Http\Controllers\DapilController;
+use App\Http\Controllers\DataKunjunganController;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\DesaController;
@@ -99,7 +100,15 @@ Route::group(['prefix' => 'data-umum', 'middleware' => ['auth', 'admin']], funct
     Route::get('/', [DataUmumController::class, 'index']);
     Route::post('/get-by-id', [DataUmumController::class, 'getById']);
     Route::post('/get-foto-by-id', [DataUmumController::class, 'getFotoById']);
+    Route::post('/get-data-by-id', [DataUmumController::class, 'getDataById']);
     Route::post('/tambah', [DataUmumController::class, 'create']);
     Route::post('/ubah', [DataUmumController::class, 'update']);
     Route::get('/hapus/{id}', [DataUmumController::class, 'delete']);
+});
+
+// Data Kunjungan
+Route::group(['prefix' => 'data-kunjungan', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [DataKunjunganController::class, 'index']);
+    Route::post('/get-penduduk', [DataKunjunganController::class, 'getPenduduk']);
+    Route::post('/simpan-target', [DataKunjunganController::class, 'simpanTarget']);
 });

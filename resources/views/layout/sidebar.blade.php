@@ -49,7 +49,7 @@
                     </a>
                 </li>
                 <li class="has_sub">
-                    <a href="javascript:void(0);" class="waves-effect">
+                    <a href="/data-kunjungan" class="waves-effect">
                         <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Kunjungan </span>
