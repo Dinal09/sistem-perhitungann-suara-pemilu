@@ -59,4 +59,12 @@ class Pemilih extends Model
     {
         return $this->hasOne(SuaraAbu::class, 'id', 'id_suara_abu');
     }
+
+    public static function getKeluarga()
+    {
+        return Pemilih::where(function ($query) {
+            $query->where(['is_keluarga' => 'keluarga-mendukung'])
+                ->orWhere(['is_keluarga' => 'keluarga-tidak']);
+        })->get();
+    }
 }

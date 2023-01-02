@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\JenisSuaraController;
 use App\Http\Controllers\DapilController;
+use App\Http\Controllers\DataKeluargaController;
 use App\Http\Controllers\DataKunjunganController;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\KecamatanController;
@@ -111,4 +112,12 @@ Route::group(['prefix' => 'data-kunjungan', 'middleware' => ['auth', 'admin']], 
     Route::get('/', [DataKunjunganController::class, 'index']);
     Route::post('/get-penduduk', [DataKunjunganController::class, 'getPenduduk']);
     Route::post('/simpan-target', [DataKunjunganController::class, 'simpanTarget']);
+});
+
+// Data Keluarga
+Route::group(['prefix' => 'data-keluarga', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [DataKeluargaController::class, 'index']);
+    Route::post('/get-pemilih-by-desa', [DataKeluargaController::class, 'getPemilihByDesa']);
+    Route::post('/ubah', [DataKeluargaController::class, 'update']);
+    Route::get('/hapus/{id}', [DataKeluargaController::class, 'delete']);
 });
