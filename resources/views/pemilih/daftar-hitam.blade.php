@@ -22,7 +22,7 @@
                                 <th>NIK</th>
                                 <th>Alamat</th>
                                 <th>No HP</th>
-                                <th>Jenis</th>
+                                {{-- <th>Jenis</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -39,7 +39,7 @@
                                 <td> {{ $d->no_nik }} </td>
                                 <td> {{ $d->alamat }} </td>
                                 <td> {{ $d->no_hp }} </td>
-                                <td> {{ $d->is_keluarga == 'keluarga-mendukung' ? 'Mendukung' : 'Tidak Menudukung' }} </td>
+                                {{-- <td> {{ $d->is_keluarga == 'keluarga-mendukung' ? 'Mendukung' : 'Tidak Menudukung' }} </td> --}}
                             </tr>
                             <?php endforeach ?>
                         </tbody>
@@ -76,18 +76,8 @@
                                     </div>
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Pemilih</label>
-                                        <select class="form-control select2" data-live-search="true" data-style="btn-white"
-                                            name="id_pemilih" id="id_pemilih" required>
+                                        <select class="form-control select2" name="id_pemilih" id="id_pemilih" required>
                                             <option>--- Pilih Pemilih ---</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Jenis Keluarga</label>
-                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
-                                            name="id_jenis" id="id_jenis" required>
-                                            <option>--- Pilih Jenis ---</option>
-                                            <option value='keluarga-mendukung'>Mendukung</option>
-                                            <option value='keluarga-tidak'>Tidak Mendukung</option>
                                         </select>
                                     </div>
                                 </div>
@@ -149,11 +139,6 @@
         type="text/javascript"></script>
     <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}" type="text/javascript">
     </script>
-    {{-- <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.mockjax.js') }}" type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.autocomplete.min.js') }}" type="text/javascript">
-    </script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/countries.js') }}" type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/pages/autocomplete.js') }}" type="text/javascript"></script> --}}
 
     <script src="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.bootstrap.js') }}"></script>
@@ -207,9 +192,8 @@
 
         $('#id_desa').change(function() {
             let id = $(this).val()
-            console.log(id)
 
-            $.post('/data-keluarga/get-pemilih-by-desa', {
+            $.post('/daftar-hitam/get-pemilih-by-desa', {
                 '_token': '{{ csrf_token() }}',
                 idDesa: id
             }).done(function(output) {

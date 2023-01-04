@@ -4,25 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Desa;
 use App\Models\Pemilih;
+use App\Models\SuaraAbu;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DataKeluargaController extends Controller
+class DataSuaraAbuController extends Controller
 {
-    public $title = 'Data Keluarga';
-    public $link = 'data-keluarga';
+
+    public $title = 'Data Suara Abu-abu';
+    public $link = 'data-suara-abu';
 
     public function index()
     {
-        $data = Pemilih::getKeluarga();
+        $data = Pemilih::getSuaraAbu();
         $desa = Desa::get();
+        $jenis = SuaraAbu::get();
         return view('pemilih.' . $this->link, [
             'data' => $data,
             'desa' => $desa,
+            'jenis' => $jenis,
             'title' => $this->title,
             'link' => $this->link,
-            'explain' => 'Menu yang berisi data pemilih yang dikategorikan sebagai keluarga, Terdapat Juga Fitur Tambah, Update dan Hapus'
+            'explain' => 'Menu yang berisi data pemilih yang dikategorikan sebagai suara abu-abu, Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }
 
@@ -34,8 +38,8 @@ class DataKeluargaController extends Controller
             ->leftJoin('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')
             ->where([
                 'tps.id_desa' => $id,
+                'id_suara_abu' => null
             ])
-            ->whereNotIn('is_keluarga', ['keluarga-mendukung', 'keluarga-tidak'])
             ->get()->toArray();
 
         $option = '<option>--- Pilih Pemilih ---</option>';
@@ -83,11 +87,11 @@ class DataKeluargaController extends Controller
         $id = $request->id_pemilih;
         $jenis = $request->id_jenis;
         $data = [
-            'is_keluarga' => $jenis,
+            'is_keluarga' => 'tidak',
             'is_simpatisan' => 'tidak',
             'is_pengkhianat' => 'tidak',
             'is_daftar_hitam' => 'tidak',
-            'id_suara_abu' => null,
+            'id_suara_abu' => $jenis,
             'keluarga_tgl' => date('Y-m-d H:i:s'),
             'keluarga_by' => Auth::user()->id
         ];

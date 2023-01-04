@@ -39,7 +39,7 @@
                                 <td> {{ $d->no_nik }} </td>
                                 <td> {{ $d->alamat }} </td>
                                 <td> {{ $d->no_hp }} </td>
-                                <td> {{ $d->is_keluarga == 'keluarga-mendukung' ? 'Mendukung' : 'Tidak Menudukung' }} </td>
+                                <td> {{ $d->suaraAbu->deskripsi }} </td>
                             </tr>
                             <?php endforeach ?>
                         </tbody>
@@ -86,8 +86,9 @@
                                         <select class="selectpicker" data-live-search="true" data-style="btn-white"
                                             name="id_jenis" id="id_jenis" required>
                                             <option>--- Pilih Jenis ---</option>
-                                            <option value='keluarga-mendukung'>Mendukung</option>
-                                            <option value='keluarga-tidak'>Tidak Mendukung</option>
+                                            <?php foreach($jenis as $j): ?>
+                                            <option value={{ $j->id }}> {{ $j->deskripsi }} </option>
+                                            <?php endforeach ?>
                                         </select>
                                     </div>
                                 </div>
@@ -209,7 +210,7 @@
             let id = $(this).val()
             console.log(id)
 
-            $.post('/data-keluarga/get-pemilih-by-desa', {
+            $.post('/data-suara-abu/get-pemilih-by-desa', {
                 '_token': '{{ csrf_token() }}',
                 idDesa: id
             }).done(function(output) {

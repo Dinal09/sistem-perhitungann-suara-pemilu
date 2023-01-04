@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DaftarHitamController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\JenisSuaraController;
 use App\Http\Controllers\DapilController;
 use App\Http\Controllers\DataKeluargaController;
 use App\Http\Controllers\DataKunjunganController;
+use App\Http\Controllers\DataPengkhianatController;
+use App\Http\Controllers\DataSimpatisanController;
+use App\Http\Controllers\DataSuaraAbuController;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\DesaController;
@@ -120,4 +124,36 @@ Route::group(['prefix' => 'data-keluarga', 'middleware' => ['auth', 'admin']], f
     Route::post('/get-pemilih-by-desa', [DataKeluargaController::class, 'getPemilihByDesa']);
     Route::post('/ubah', [DataKeluargaController::class, 'update']);
     Route::get('/hapus/{id}', [DataKeluargaController::class, 'delete']);
+});
+
+// Data Simpatisan
+Route::group(['prefix' => 'data-simpatisan', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [DataSimpatisanController::class, 'index']);
+    Route::post('/get-pemilih-by-desa', [DataSimpatisanController::class, 'getPemilihByDesa']);
+    Route::post('/ubah', [DataSimpatisanController::class, 'update']);
+    Route::get('/hapus/{id}', [DataSimpatisanController::class, 'delete']);
+});
+
+// Data Pengkhianat
+Route::group(['prefix' => 'data-pengkhianat', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [DataPengkhianatController::class, 'index']);
+    Route::post('/get-pemilih-by-desa', [DataPengkhianatController::class, 'getPemilihByDesa']);
+    Route::post('/ubah', [DataPengkhianatController::class, 'update']);
+    Route::get('/hapus/{id}', [DataPengkhianatController::class, 'delete']);
+});
+
+// Daftar Hitam
+Route::group(['prefix' => 'daftar-hitam', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [DaftarHitamController::class, 'index']);
+    Route::post('/get-pemilih-by-desa', [DaftarHitamController::class, 'getPemilihByDesa']);
+    Route::post('/ubah', [DaftarHitamController::class, 'update']);
+    Route::get('/hapus/{id}', [DaftarHitamController::class, 'delete']);
+});
+
+// Data Suara Abu-abu
+Route::group(['prefix' => 'data-suara-abu', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [DataSuaraAbuController::class, 'index']);
+    Route::post('/get-pemilih-by-desa', [DataSuaraAbuController::class, 'getPemilihByDesa']);
+    Route::post('/ubah', [DataSuaraAbuController::class, 'update']);
+    Route::get('/hapus/{id}', [DataSuaraAbuController::class, 'delete']);
 });

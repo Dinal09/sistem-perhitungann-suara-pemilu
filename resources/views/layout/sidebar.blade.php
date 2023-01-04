@@ -63,31 +63,31 @@
                     </a>
                 </li>
                 <li class="has_sub">
-                    <a href="javascript:void(0);" class="waves-effect">
+                    <a href="/data-simpatisan" class="waves-effect">
                         <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Simpatisan </span>
                     </a>
                 </li>
                 <li class="has_sub">
-                    <a href="javascript:void(0);" class="waves-effect">
+                    <a href="/data-suara-abu" class="waves-effect">
                         <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Suara Abu-abu </span>
                     </a>
                 </li>
                 <li class="has_sub">
-                    <a href="javascript:void(0);" class="waves-effect">
+                    <a href="/data-pengkhianat" class="waves-effect">
                         <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Pengkhianat </span>
                     </a>
                 </li>
                 <li class="has_sub">
-                    <a href="javascript:void(0);" class="waves-effect">
+                    <a href="/daftar-hitam" class="waves-effect">
                         <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
-                        <span>Data Hitam </span>
+                        <span>Daftar Hitam </span>
                     </a>
                 </li>
 

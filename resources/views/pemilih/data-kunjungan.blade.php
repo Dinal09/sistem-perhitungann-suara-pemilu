@@ -23,7 +23,7 @@
                     $idxLogo = 1;
                     foreach($kec->desa as $des):
                  ?>
-                <div class="col-md-6 col-sm-6 col-lg-2">
+                <div class="col-md-6 col-sm-6 col-lg-3">
                     <div class="mini-stat clearfix card-box">
                         <span class="mini-stat-icon <?= $color[$idxColor] ?> btn-ubah" data-id="{{ $des->id }}"
                             data-toggle="modal" data-target="#modal-edit">
@@ -165,11 +165,11 @@
 
                     $('#target-kunjungan').val(result.data.target_kunjungan)
                     $('#id_desa').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
 
@@ -189,11 +189,11 @@
                     )
 
                     location.reload()
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         }
     </script>

@@ -67,4 +67,25 @@ class Pemilih extends Model
                 ->orWhere(['is_keluarga' => 'keluarga-tidak']);
         })->get();
     }
+
+    public static function getSimpatisan()
+    {
+        return Pemilih::where(['is_simpatisan' => 'iya'])->get();
+    }
+
+    public static function getPengkhianat()
+    {
+        return Pemilih::where(['is_pengkhianat' => 'iya'])->get();
+    }
+
+    public static function getDaftarHitam()
+    {
+        return Pemilih::where(['is_daftar_hitam' => 'iya'])->get();
+    }
+
+    public static function getSuaraAbu()
+    {
+        return Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
+            ->join('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')->get();
+    }
 }

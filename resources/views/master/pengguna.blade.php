@@ -331,11 +331,11 @@
                     $('#ubah-alamat').val(result.data.alamat)
                     $('#ubah-no_telp').val(result.data.no_telp)
                     $('#ubah-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
 
@@ -355,11 +355,11 @@
 
                     $('#ubah-foto-lama').attr('src', result.foto)
                     $('#ubah-foto-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
 
@@ -377,11 +377,11 @@
                     )
 
                     $('#ubah-password-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
     </script>

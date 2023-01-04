@@ -422,7 +422,8 @@
                                 <div class="form-group">
                                     <label for="field-7" class="control-label">Kecamatan</label>
                                     <input type="hidden" id="pilih-tps-id" name="id">
-                                    <select class="form-control select2" id="id_tps" name="id_tps" required>
+                                    <select class="selectpicker" data-live-search="true" data-style="btn-white"
+                                        id="id_tps" name="id_tps" required>
                                         <option>--- Pilih TPS ---</option>
                                         <?php foreach($desa as $d): ?>
                                         <optgroup label=" {{ $d->nama }} ">
@@ -518,9 +519,6 @@
     <link href="{{ url('/ubold/assets/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css') }}"
         rel="stylesheet" />
 
-    <link href="{{ url('/ubold/assets/plugins/custombox/css/custombox.css') }}" rel="stylesheet">
-    <link href="{{ url('/ubold/assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
-
     <link href="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.css') }}" rel="stylesheet"
         type="text/css" />
     <link href="{{ url('/ubold/assets/plugins/datatables/buttons.bootstrap.min.css') }}" rel="stylesheet"
@@ -548,11 +546,6 @@
     <script src="{{ url('/ubold/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
-
-    {{-- <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.mockjax.js') }}"></script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.autocomplete.min.js') }}"></script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/countries.js') }}"></script>
-    <script src="{{ url('/ubold/assets/pages/autocomplete.js') }}"></script> --}}
 
     <script src="{{ url('/ubold/assets/pages/jquery.form-advanced.init.js') }}"></script>
 
@@ -625,11 +618,11 @@
                     $('#ubah-alamat').val(result.data.alamat)
                     $('#ubah-no_hp').val(result.data.no_hp)
                     $('#ubah-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
 
@@ -664,11 +657,11 @@
                     $('#lihat-data-alamat').html(result.data.alamat)
 
                     $('#lihat-data-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
 
@@ -689,11 +682,11 @@
                         $('#get-data-by-id').val(result.data.tps.id)
                     }
                     $('#pilih-tps-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
 
@@ -711,11 +704,11 @@
                     )
 
                     $('#lihat-foto-foto').attr('src', result.foto)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         }
 
@@ -733,11 +726,11 @@
                     )
 
                     $('#lihat-foto-foto').attr('src', result.foto)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         }
     </script>

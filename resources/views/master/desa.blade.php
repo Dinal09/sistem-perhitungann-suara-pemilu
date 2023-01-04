@@ -71,7 +71,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Kecamatan</label>
-                                        <select class="form-control select2" name="id_kecamatan" required>
+                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
+                                            name="id_kecamatan" required>
                                             <option>--- Pilih Kecamatan ---</option>
                                             <?php foreach($kecamatan as $dap): ?>
                                             <optgroup label=" {{ $dap->nama }} ">
@@ -118,8 +119,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Kecamatan</label>
-                                        <select class="form-control select2" name="id_kecamatan" id="ubah-id_kecamatan"
-                                            required>
+                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
+                                            name="id_kecamatan" id="ubah-id_kecamatan" required>
                                             <option>--- Pilih Kecamatan ---</option>
                                             <?php foreach($kecamatan as $dap): ?>
                                             <optgroup label=" {{ $dap->nama }} ">
@@ -197,11 +198,6 @@
         type="text/javascript"></script>
     <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}" type="text/javascript">
     </script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.mockjax.js') }}" type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.autocomplete.min.js') }}" type="text/javascript">
-    </script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/countries.js') }}" type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/pages/autocomplete.js') }}" type="text/javascript"></script>
 
     <script src="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.bootstrap.js') }}"></script>
@@ -270,11 +266,11 @@
                     $('#ubah-nama').val(result.data.nama)
                     $('#ubah-id_kecamatan').val(result.data.kecamatan_id).trigger('change')
                     $('#ubah-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
     </script>

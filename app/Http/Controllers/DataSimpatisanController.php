@@ -8,21 +8,21 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DataKeluargaController extends Controller
+class DataSimpatisanController extends Controller
 {
-    public $title = 'Data Keluarga';
-    public $link = 'data-keluarga';
+    public $title = 'Data Simpatisan';
+    public $link = 'data-simpatisan';
 
     public function index()
     {
-        $data = Pemilih::getKeluarga();
+        $data = Pemilih::getSimpatisan();
         $desa = Desa::get();
         return view('pemilih.' . $this->link, [
             'data' => $data,
             'desa' => $desa,
             'title' => $this->title,
             'link' => $this->link,
-            'explain' => 'Menu yang berisi data pemilih yang dikategorikan sebagai keluarga, Terdapat Juga Fitur Tambah, Update dan Hapus'
+            'explain' => 'Menu yang berisi data pemilih yang dikategorikan sebagai simpatisan, Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }
 
@@ -35,7 +35,7 @@ class DataKeluargaController extends Controller
             ->where([
                 'tps.id_desa' => $id,
             ])
-            ->whereNotIn('is_keluarga', ['keluarga-mendukung', 'keluarga-tidak'])
+            ->whereNotIn('is_simpatisan', ['iya'])
             ->get()->toArray();
 
         $option = '<option>--- Pilih Pemilih ---</option>';
@@ -81,10 +81,9 @@ class DataKeluargaController extends Controller
     public function update(Request $request)
     {
         $id = $request->id_pemilih;
-        $jenis = $request->id_jenis;
         $data = [
-            'is_keluarga' => $jenis,
-            'is_simpatisan' => 'tidak',
+            'is_simpatisan' => 'iya',
+            'is_keluarga' => 'tidak',
             'is_pengkhianat' => 'tidak',
             'is_daftar_hitam' => 'tidak',
             'id_suara_abu' => null,
@@ -100,7 +99,7 @@ class DataKeluargaController extends Controller
     {
         $id = $id;
         $data = [
-            'is_keluarga' => 'tidak',
+            'is_simpatisan' => 'tidak',
             'keluarga_tgl' => date('Y-m-d H:i:s'),
             'keluarga_by' => Auth::user()->id
         ];

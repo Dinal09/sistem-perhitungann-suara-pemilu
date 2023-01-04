@@ -148,11 +148,11 @@
 
                     $('#ubah-nama').val(result.data.nama)
                     $('#ubah-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
     </script>

@@ -66,7 +66,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Dapil</label>
-                                        <select class="form-control select2" name="id_dapil" required>
+                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
+                                            name="id_dapil" required>
                                             <option>--- Pilih Dapil ---</option>
                                             <?php foreach($dapil as $dap): ?>
                                             <option value={{ $dap->id }}> {{ $dap->nama }} </option>
@@ -109,7 +110,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Dapil</label>
-                                        <select class="form-control select2" name="id_dapil" id="ubah-id_dapil" required>
+                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
+                                            name="id_dapil" id="ubah-id_dapil" required>
                                             <option>--- Pilih Dapil ---</option>
                                             <?php foreach($dapil as $dap): ?>
                                             <option value={{ $dap->id }}> {{ $dap->nama }} </option>
@@ -142,8 +144,14 @@
 
 
 @section('add-header')
+    <link href="{{ url('/ubold/assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css') }}" rel="stylesheet" />
+    <link href="{{ url('/ubold/assets/plugins/switchery/css/switchery.min.css') }}" rel="stylesheet" />
+    <link href="{{ url('/ubold/assets/plugins/multiselect/css/multi-select.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('/ubold/assets/plugins/custombox/css/custombox.css') }}" rel="stylesheet">
     <link href="{{ url('/ubold/assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('/ubold/assets/plugins/bootstrap-select/css/bootstrap-select.min.css') }}" rel="stylesheet" />
+    <link href="{{ url('/ubold/assets/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css') }}"
+        rel="stylesheet" />
 
     <link href="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.css') }}" rel="stylesheet"
         type="text/css" />
@@ -163,7 +171,17 @@
 @endsection
 
 @section('add-footer')
-    <script src="{{ url('/ubold/assets/plugins/select2/js/select2.min.js') }}" type="text/javascript"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/switchery/js/switchery.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/multiselect/js/jquery.multi-select.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/jquery-quicksearch/jquery.quicksearch.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
+
+    <script src="{{ url('/ubold/assets/pages/jquery.form-advanced.init.js') }}"></script>
 
     <script src="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.bootstrap.js') }}"></script>
@@ -231,11 +249,11 @@
                     $('#ubah-nama').val(result.data.nama)
                     $('#ubah-id_dapil').val(result.data.dapil_id).trigger('change')
                     $('#ubah-id').val(result.data.id)
-                } else [
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
                     )
-                ]
+                }
             })
         })
     </script>
