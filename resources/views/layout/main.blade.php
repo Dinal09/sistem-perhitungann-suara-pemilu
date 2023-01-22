@@ -2,8 +2,6 @@
 <html>
 
 <head>
-    @yield('add-header')
-
     @include('layout.header')
 </head>
 

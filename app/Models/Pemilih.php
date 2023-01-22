@@ -50,6 +50,7 @@ class Pemilih extends Model
     ];
     public $timestamp = TRUE;
 
+    private $jenisData = ['is_simpatisan', 'pengkhianat', 'is_daftar_hitam'];
 
     public function tps()
     {
@@ -87,5 +88,50 @@ class Pemilih extends Model
     {
         return Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
             ->join('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')->get();
+    }
+
+    public static function getTotalDataUmum()
+    {
+        return Pemilih::count();
+    }
+
+    public static function getTotalKeluarga()
+    {
+        return Pemilih::where(function ($query) {
+            $query->where(['is_keluarga' => 'keluarga-mendukung'])
+                ->orWhere(['is_keluarga' => 'keluarga-tidak']);
+        })->count();
+    }
+
+    public static function getTotalSimpatisan()
+    {
+        return Pemilih::where(['is_simpatisan' => 'iya'])->count();
+    }
+
+    public static function getTotalPengkhianat()
+    {
+        return Pemilih::where(['is_pengkhianat' => 'iya'])->count();
+    }
+
+    public static function getTotalDaftarHitam()
+    {
+        return Pemilih::where(['is_daftar_hitam' => 'iya'])->count();
+    }
+
+    public static function getTotalSuaraAbu()
+    {
+        return Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
+            ->join('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')->count();
+    }
+
+    public function getChartDataByDesa($idDesa)
+    {
+        $hasil = array();
+        foreach ($this->jenisData as $j) {
+            $hasil = Pemilih::where([
+                $j => 'iya',
+                'tps.id_desa' => $idDesa
+            ])->join('tps', 'pemilih.id_tps', '=', 'tps.id')->count();
+        }
     }
 }

@@ -6,6 +6,29 @@
     ?>
     <div class="container">
         <div class="row">
+            <div class="col-12">
+                <div class="panel panel-border panel-inverse">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Pilih Kecamatan</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group no-margin">
+                            <label for="field-7" class="control-label">Kecamatan</label>
+                            <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_kecamatan"
+                                id="ubah-id-kecamatan" required>
+                                <option>--- Pilih Kecamatan ---</option>
+                                <?php foreach($dapil as $dap): ?>
+                                <optgroup label=" {{ $dap->nama }} ">
+                                    <?php foreach ($dap->kecamatan as $kec): ?>
+                                    <option value={{ $kec->id }}> {{ $kec->nama }} </option>
+                                    <?php endforeach ?>
+                                </optgroup>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <?php foreach($kecamatan as $idx => $kec): ?>
             <div class="col-12">
                 <div class="portlet">
@@ -53,10 +76,10 @@
                 <?php
                     $idxColor++;
                     $idxLogo++;
-                    if($idxColor > count($color)){
+                    if($idxColor >= count($color)){
                         $idxColor = 0;
                     }
-                    if($idxLogo > 9){
+                    if($idxLogo >= 9){
                         $idxLogo = 1;
                     }
                     endforeach
@@ -149,6 +172,11 @@
 
     <script src="{{ url('/ubold/assets/plugins/jquery-sparkline/jquery.sparkline.min.js') }}"></script>
     <script>
+        $('#ubah-id-kecamatan').change(function() {
+            let kec = $(this).val()
+            window.location.href = '/data-kunjungan/' + kec
+        })
+
         $('.btn-ubah').click(function() {
             let id = $(this).data('id')
             console.log(id)

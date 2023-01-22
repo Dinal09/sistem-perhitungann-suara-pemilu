@@ -19,6 +19,8 @@
 <script src="{{ url('/ubold/assets/js/jquery.core.js') }}"></script>
 <script src="{{ url('/ubold/assets/js/jquery.app.js') }}"></script>
 
+@yield('add-chart-footer')
+
 <script src="{{ url('/ubold/assets/plugins/custombox/js/custombox.min.js') }}"></script>
 <script src="{{ url('/ubold/assets/plugins/custombox/js/legacy.min.js') }}"></script>
 

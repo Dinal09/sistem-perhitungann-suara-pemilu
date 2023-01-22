@@ -76,8 +76,7 @@
                                     </div>
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Pemilih</label>
-                                        <select class="form-control select2" data-live-search="true" data-style="btn-white"
-                                            name="id_pemilih" id="id_pemilih" required>
+                                        <select class="form-control select2" name="id_pemilih" id="id_pemilih" required>
                                             <option>--- Pilih Pemilih ---</option>
                                         </select>
                                     </div>
@@ -177,6 +176,9 @@
     <script type="text/javascript" src="{{ url('/ubold/assets/pages/jquery.form-advanced.init.js') }}"></script>
 
     <script type="text/javascript">
+        $('.select2').select2({
+            className: "form-control"
+        });
         $(document).ready(function() {
             $('#datatable').dataTable();
             $('#datatable-keytable').DataTable({

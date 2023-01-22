@@ -31,7 +31,7 @@ class AuthController extends Controller
                 if (Auth::user()->role == 'super admin' || Auth::user()->role == 'admin') {
                     return redirect('/');
                 } else {
-                    return redirect('/dokter');
+                    return redirect('/dashboard-caleg/');
                 }
             } else {
                 return redirect()->back()->with('error', 'username atau password salah');

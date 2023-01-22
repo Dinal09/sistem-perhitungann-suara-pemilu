@@ -43,49 +43,42 @@
                 <li class="text-muted menu-title">Pemilih</li>
                 <li class="has_sub">
                     <a href="/data-umum" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Umum </span>
                     </a>
                 </li>
                 <li class="has_sub">
-                    <a href="/data-kunjungan" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
+                    <a href="/data-kunjungan/14" class="waves-effect">
                         <i class="ti-user"></i>
                         <span>Data Kunjungan </span>
                     </a>
                 </li>
                 <li class="has_sub">
                     <a href="/data-keluarga" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Keluarga </span>
                     </a>
                 </li>
                 <li class="has_sub">
                     <a href="/data-simpatisan" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Simpatisan </span>
                     </a>
                 </li>
                 <li class="has_sub">
                     <a href="/data-suara-abu" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Suara Abu-abu </span>
                     </a>
                 </li>
                 <li class="has_sub">
                     <a href="/data-pengkhianat" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Data Pengkhianat </span>
                     </a>
                 </li>
                 <li class="has_sub">
                     <a href="/daftar-hitam" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Daftar Hitam </span>
                     </a>
@@ -94,7 +87,6 @@
                 <li class="text-muted menu-title">Hasil Pemilu</li>
                 <li class="has_sub">
                     <a href="javascript:void(0);" class="waves-effect">
-                        <span class="label label-primary pull-right">9</span>
                         <i class="ti-user"></i>
                         <span>Hasil </span>
                     </a>

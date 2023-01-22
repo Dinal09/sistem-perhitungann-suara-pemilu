@@ -17,31 +17,32 @@ class KecamatanController extends Controller
         $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'dapil.nama AS dapil_nama'])
             ->leftJoin('dapil', 'dapil.id', '=', 'kecamatan.id_dapil')->get();
         $dapil = Dapil::get();
-        return view('master.'.$this->link, [
+        return view('master.' . $this->link, [
             'data' => $data,
             'dapil' => $dapil,
 
             'title' => $this->title,
             'link' => $this->link,
-            'explain' => 'Menu yang berisi data '.$this->link.', Terdapat Juga Fitur Tambah, Update dan Hapus'
+            'explain' => 'Menu yang berisi data ' . $this->link . ', Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }
 
-    public function getById(Request $request){
+    public function getById(Request $request)
+    {
         $id = $request->id;
         $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'dapil.nama AS dapil_nama', 'dapil.id AS dapil_id'])
             ->leftJoin('dapil', 'dapil.id', '=', 'kecamatan.id_dapil')->where('kecamatan.id', $id)->first();
 
-        if($data){
+        if ($data) {
             return json_encode([
                 'kode' => 200,
-                'pesan' => 'Data '.$this->title.' Berhasil Ditemukan...!!',
+                'pesan' => 'Data ' . $this->title . ' Berhasil Ditemukan...!!',
                 'data' => $data
             ]);
-        }else{
+        } else {
             return json_encode([
                 'kode' => 400,
-                'pesan' => 'Data '.$this->title.' Tidak Ditemukan...!!',
+                'pesan' => 'Data ' . $this->title . ' Tidak Ditemukan...!!',
             ]);
         }
     }
@@ -55,10 +56,25 @@ class KecamatanController extends Controller
             return redirect()->back()->with('error', $validate->errors()->first());
         }
         $data = $request->all();
-        unset($data['_token']);
-        Kecamatan::create($data);
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Ditambahkan...!!');
+        if (strpos($data['nama'], ",") !== false) {
+            $exp = explode(', ', $data['nama']);
+
+            foreach ($exp as $e) {
+                $insertData[] = [
+                    'id_dapil' => $data['id_dapil'],
+                    'nama' => $e,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+            }
+
+            Kecamatan::insert($insertData);
+        } else {
+            unset($data['_token']);
+            Kecamatan::create($data);
+        }
+
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
     }
 
     public function update(Request $request)
@@ -69,13 +85,13 @@ class KecamatanController extends Controller
         unset($data['id']);
         Kecamatan::where('id', $id)->update($data);
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Diedit...!!');
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Diedit...!!');
     }
 
     public function delete($id)
     {
         Kecamatan::where('id', $id)->delete();
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Dihapus...!!');
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Dihapus...!!');
     }
 }

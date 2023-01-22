@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dapil;
 use App\Models\Desa;
 use App\Models\Kecamatan;
 use App\Models\Pemilih;
@@ -12,25 +13,30 @@ class DataKunjunganController extends Controller
     public $title = 'Data Kunjungan';
     public $link = 'data-kunjungan';
 
-    public function index()
+    public function index($kec)
     {
-        $kecamatan = Kecamatan::with('desa.tps')->get();
+        $dataKecamatan = Dapil::with('kecamatan')->get();
+        $kecamatan = array();
+        $persen = array();
 
-        foreach ($kecamatan as $idx => $kec) {
-            foreach ($kec->desa as $des) {
-                $kunjungan = Pemilih::leftJoin('tps', 'pemilih.id_tps', '=', 'tps.id')
-                    ->leftJoin('desa', 'tps.id_desa', '=', 'desa.id')
-                    ->where([
-                        'desa.id' => $des->id,
-                        'pemilih.is_kunjungan' => 'sudah'
-                    ])
-                    ->count();
-                $persen[$idx][$des->id]['kunjungan'] = $kunjungan;
+        if ($kec != '-') {
+            $kecamatan = Kecamatan::with('desa.tps')->where(['id' => $kec])->get();
+            foreach ($kecamatan as $idx => $kec) {
+                foreach ($kec->desa as $des) {
+                    $kunjungan = Pemilih::leftJoin('tps', 'pemilih.id_tps', '=', 'tps.id')
+                        ->leftJoin('desa', 'tps.id_desa', '=', 'desa.id')
+                        ->where([
+                            'desa.id' => $des->id,
+                            'pemilih.is_kunjungan' => 'sudah'
+                        ])
+                        ->count();
+                    $persen[$idx][$des->id]['kunjungan'] = $kunjungan;
 
-                if ($kunjungan != 0 || !is_null($des->target_kunjungan)) {
-                    $persen[$idx][$des->id]['persen'] = ($kunjungan / $des->target_kunjungan) * 100;
-                } else {
-                    $persen[$idx][$des->id]['persen'] = 0;
+                    if ($kunjungan != 0 || !is_null($des->target_kunjungan)) {
+                        $persen[$idx][$des->id]['persen'] = ($kunjungan / $des->target_kunjungan) * 100;
+                    } else {
+                        $persen[$idx][$des->id]['persen'] = 0;
+                    }
                 }
             }
         }
@@ -39,6 +45,7 @@ class DataKunjunganController extends Controller
             'title' => $this->title,
             'link' => $this->link,
             'kecamatan' => $kecamatan,
+            'dapil' => $dataKecamatan,
             'persen' => $persen,
             'explain' => 'Menu yang berisi data semua desa yang akan dikunjungi, Terdapat Juga Fitur Tambah, Update, Hapus dan Export Ke berbagai
                             tipe file yang diinginkan'
@@ -68,6 +75,10 @@ class DataKunjunganController extends Controller
     {
         $data = $request->all();
         $id = $request->id;
+
+        if ($data['target_kunjungan'] == 0) {
+            $data['target_kunjungan'] = null;
+        }
 
         unset($data['_token']);
         unset($data['id']);

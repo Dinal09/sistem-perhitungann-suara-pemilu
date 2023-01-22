@@ -15,7 +15,6 @@ class DesaController extends Controller
     public function index()
     {
         $data = Desa::with('kecamatan.dapil')->get();
-
         $kecamatan = Dapil::with('kecamatan')->get();
 
         return view('master.' . $this->link, [
@@ -55,9 +54,24 @@ class DesaController extends Controller
         if ($validate->fails()) {
             return redirect()->back()->with('error', $validate->errors()->first());
         }
+
         $data = $request->all();
-        unset($data['_token']);
-        Desa::create($data);
+        if (strpos($data['nama'], ",") !== false) {
+            $exp = explode(', ', $data['nama']);
+
+            foreach ($exp as $e) {
+                $insertData[] = [
+                    'id_kecamatan' => $data['id_kecamatan'],
+                    'nama' => $e,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+            }
+
+            Desa::insert($insertData);
+        } else {
+            unset($data['_token']);
+            Desa::create($data);
+        }
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
     }

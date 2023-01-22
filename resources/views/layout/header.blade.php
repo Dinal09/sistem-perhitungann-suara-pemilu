@@ -8,10 +8,11 @@
 <title>{{ env('APP_NAME') }} | {{ $title }}</title>
 
 <!--Morris Chart CSS -->
-<link rel="stylesheet" href="{{ url('/ubold/assets/plugins/morris/morris.css') }}">
-
 <link href="{{ url('/ubold/assets/plugins/ladda-buttons/css/ladda-themeless.min.css') }}" rel="stylesheet"
     type="text/css" />
+<link rel="stylesheet" href="{{ url('/ubold/assets/plugins/morris/morris.css') }}">
+
+@yield('add-header')
 
 <link href="{{ url('/ubold/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ url('/ubold/assets/css/core.css') }}" rel="stylesheet" type="text/css" />

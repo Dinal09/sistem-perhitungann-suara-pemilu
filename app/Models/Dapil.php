@@ -19,6 +19,6 @@ class Dapil extends Model
 
     public function kecamatan()
     {
-        return $this->hasMany(Kecamatan::class, 'id_dapil', 'id');
+        return $this->hasMany(Kecamatan::class, 'id_dapil', 'id')->orderBy('nama');
     }
 }

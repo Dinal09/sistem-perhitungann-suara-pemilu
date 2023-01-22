@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Users;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +15,11 @@ class UsersController extends Controller
 
     public function index()
     {
-        $data = Users::get();
+        if (Auth::user()->role == 'super admin') {
+            $data = Users::get();
+        } else {
+            $data = Users::where(['role' => 'admin'])->get();
+        }
         return view('master.' . $this->link, [
             'data' => $data,
             'title' => $this->title,
