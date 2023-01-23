@@ -9,11 +9,32 @@
                     <p class="text-muted font-13 m-b-30">
                         {{ $explain }}</code>.
                     </p>
-                    <a href="#custom-modal-tambah" class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
-                        data-toggle="modal" data-target="#modal-tambah">
-                        <span class="btn-label"><i class="fa fa-plus"></i></span>
-                        Tambah Data
-                    </a>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <a href="#custom-modal-tambah" class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
+                                data-toggle="modal" data-target="#modal-tambah">
+                                <span class="btn-label"><i class="fa fa-plus"></i></span>
+                                Tambah Data
+                            </a>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group no-margin">
+                                <label for="field-7" class="control-label">Desa</label>
+                                <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_desa"
+                                    id="filter-desa" required>
+                                    <option value="all" <?= $filter_id == 'all' ? 'selected' : '' ?>>Semua Data</option>
+                                    <?php foreach($desa as $dap): ?>
+                                    <optgroup label=" {{ $dap->nama }} ">
+                                        <?php foreach ($dap->desa as $des): ?>
+                                        <option value={{ $des->id }} <?= $filter_id == $des->id ? 'selected' : '' ?>>
+                                            {{ $des->nama }} </option>
+                                        <?php endforeach ?>
+                                    </optgroup>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
@@ -267,6 +288,12 @@
                     )
                 }
             })
+        })
+
+        $('#filter-desa').change(function() {
+            let id = $(this).val()
+
+            window.location.href = '/tps/' + id
         })
     </script>
 @endsection

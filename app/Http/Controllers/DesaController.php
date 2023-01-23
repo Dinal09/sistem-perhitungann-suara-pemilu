@@ -12,9 +12,13 @@ class DesaController extends Controller
     public $title = 'Desa';
     public $link = 'desa';
 
-    public function index()
+    public function index($id)
     {
-        $data = Desa::with('kecamatan.dapil')->get();
+        if ($id == 'all') {
+            $data = Desa::with('kecamatan.dapil')->orderBy('nama')->get();
+        } else {
+            $data = Desa::with('kecamatan.dapil')->orderBy('nama')->where(['id_kecamatan' => $id])->get();
+        }
         $kecamatan = Dapil::with('kecamatan')->get();
 
         return view('master.' . $this->link, [
@@ -22,6 +26,7 @@ class DesaController extends Controller
             'kecamatan' => $kecamatan,
             'title' => $this->title,
             'link' => $this->link,
+            'filter_id' => $id,
             'explain' => 'Menu yang berisi data ' . $this->link . ', Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }

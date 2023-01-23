@@ -22,9 +22,9 @@
                             Daerah </span> <span class="menu-arrow"></span> </a>
                     <ul class="list-unstyled">
                         <li><a href="/dapil">Dapil</a></li>
-                        <li><a href="/kecamatan">Kecamatan</a></li>
-                        <li><a href="/desa">Desa</a></li>
-                        <li><a href="/tps">TPS</a></li>
+                        <li><a href="/kecamatan/all">Kecamatan</a></li>
+                        <li><a href="/desa/all">Desa</a></li>
+                        <li><a href="/tps/all">TPS</a></li>
                     </ul>
                 </li>
                 <li class="has_sub">

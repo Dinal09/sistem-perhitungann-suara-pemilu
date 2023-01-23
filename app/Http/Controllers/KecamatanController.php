@@ -12,10 +12,15 @@ class KecamatanController extends Controller
     public $title = 'Kecamatan';
     public $link = 'kecamatan';
 
-    public function index()
+    public function index($id)
     {
-        $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'dapil.nama AS dapil_nama'])
-            ->leftJoin('dapil', 'dapil.id', '=', 'kecamatan.id_dapil')->get();
+        if ($id == 'all') {
+            $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'dapil.nama AS dapil_nama'])
+                ->leftJoin('dapil', 'dapil.id', '=', 'kecamatan.id_dapil')->orderBy('nama')->get();
+        } else {
+            $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'dapil.nama AS dapil_nama'])
+                ->leftJoin('dapil', 'dapil.id', '=', 'kecamatan.id_dapil')->orderBy('nama')->where(['id_dapil' => $id])->get();
+        }
         $dapil = Dapil::get();
         return view('master.' . $this->link, [
             'data' => $data,
@@ -23,6 +28,7 @@ class KecamatanController extends Controller
 
             'title' => $this->title,
             'link' => $this->link,
+            'filter_id' => $id,
             'explain' => 'Menu yang berisi data ' . $this->link . ', Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }

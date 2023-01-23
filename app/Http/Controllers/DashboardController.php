@@ -6,6 +6,7 @@ use App\Models\Dapil;
 use App\Models\Desa;
 use App\Models\Kecamatan;
 use App\Models\Pemilih;
+use App\Models\SuaraAbu;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -19,7 +20,6 @@ class DashboardController extends Controller
         $data['total']['pengkhianat'] = Pemilih::getTotalPengkhianat();
         $data['total']['daftar-hitam'] = Pemilih::getTotalDaftarHitam();
         $data['total']['abu-abu'] = Pemilih::getTotalSuaraAbu();
-
 
         return view('dashboard.index', [
             'data' => $data,
@@ -38,12 +38,16 @@ class DashboardController extends Controller
 
         $dapil = Dapil::with('kecamatan')->get();
         $kecamatan = Dapil::with('kecamatan')->get();
+        $desa = Kecamatan::with('desa')->get();
+        $suaraAbu = SuaraAbu::get()->toArray();
 
         return view('dashboard.index2', [
             'data' => $data,
             'title' => 'Dashboard',
             'dapil' => $dapil,
-            'kecamatan' => $kecamatan
+            'kecamatan' => $kecamatan,
+            'desa' => $desa,
+            'suara_abu' => $suaraAbu
         ]);
     }
 
@@ -128,6 +132,121 @@ class DashboardController extends Controller
             'nama' => $kecNama[0]['nama'],
             'total_target' => $totalTarget,
             'total_pemilih' => $totalPemilih
+        ]);
+    }
+
+    public function dataPembagianPemilih($jenis, $id)
+    {
+        $queryKeluargaMendukung = Pemilih::join('tps', 'pemilih.id_tps', '=', 'tps.id');
+        $queryKeluargaTidak = Pemilih::join('tps', 'pemilih.id_tps', '=', 'tps.id');
+        $querySimpatisan = Pemilih::join('tps', 'pemilih.id_tps', '=', 'tps.id');
+        $querySuaraAbu = Pemilih::join('tps', 'pemilih.id_tps', '=', 'tps.id');
+        $queryDaftarHitam = Pemilih::join('tps', 'pemilih.id_tps', '=', 'tps.id');
+        $queryPengkhianat = Pemilih::join('tps', 'pemilih.id_tps', '=', 'tps.id');
+
+        if ($jenis == 'dapil') {
+            $nama = Dapil::select(['nama'])->where(['id' => $id])->get()->toArray();
+            $totalPemilih = Desa::where(['id_dapil' => $id])
+                ->join('kecamatan', 'desa.id_kecamatan', '=', 'kecamatan.id')
+                ->sum('jumlah_penduduk');
+
+            $queryKeluargaMendukung->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->join('kecamatan', 'desa.id_kecamatan', '=', 'kecamatan.id')
+                ->where(['id_dapil' => $id, 'is_keluarga' => 'keluarga-mendukung']);
+            $queryKeluargaTidak->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->join('kecamatan', 'desa.id_kecamatan', '=', 'kecamatan.id')
+                ->where(['id_dapil' => $id, 'is_keluarga' => 'keluarga-tidak']);
+            $querySimpatisan->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->join('kecamatan', 'desa.id_kecamatan', '=', 'kecamatan.id')
+                ->where(['id_dapil' => $id, 'is_simpatisan' => 'iya']);
+            $querySuaraAbu->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->join('kecamatan', 'desa.id_kecamatan', '=', 'kecamatan.id')
+                ->where(['id_dapil' => $id, 'id_suara_abu' => null]);
+            $queryDaftarHitam->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->join('kecamatan', 'desa.id_kecamatan', '=', 'kecamatan.id')
+                ->where(['id_dapil' => $id, 'is_daftar_hitam' => 'iya']);
+            $queryPengkhianat->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->join('kecamatan', 'desa.id_kecamatan', '=', 'kecamatan.id')
+                ->where(['id_dapil' => $id, 'is_pengkhianat' => 'iya']);
+        } elseif ($jenis == 'kecamatan') {
+            $nama = Kecamatan::select(['nama'])->where(['id' => $id])->get()->toArray();
+            $totalPemilih = Desa::where(['id_kecamatan' => $id])
+                ->sum('jumlah_penduduk');
+
+            $queryKeluargaMendukung->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->where(['id_kecamatan' => $id, 'is_keluarga' => 'keluarga-mendukung']);
+            $queryKeluargaTidak->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->where(['id_kecamatan' => $id, 'is_keluarga' => 'keluarga-tidak']);
+            $querySimpatisan->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->where(['id_kecamatan' => $id, 'is_simpatisan' => 'iya']);
+            $querySuaraAbu->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->where(['id_kecamatan' => $id, 'id_suara_abu' => null]);
+            $queryDaftarHitam->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->where(['id_kecamatan' => $id, 'is_daftar_hitam' => 'iya']);
+            $queryPengkhianat->join('desa', 'tps.id_desa', '=', 'desa.id')
+                ->where(['id_kecamatan' => $id, 'is_pengkhianat' => 'iya']);
+        } else {
+            $nama = Desa::select(['nama'])->where(['id' => $id])->get()->toArray();
+            $totalPemilih = Desa::where(['id' => $id])
+                ->sum('jumlah_penduduk');
+
+            $queryKeluargaMendukung->where(['id_desa' => $id, 'is_keluarga' => 'keluarga-mendukung']);
+            $queryKeluargaTidak->where(['id_desa' => $id, 'is_keluarga' => 'keluarga-tidak']);
+            $querySimpatisan->where(['id_desa' => $id, 'is_simpatisan' => 'iya']);
+            $querySuaraAbu->where(['id_desa' => $id, 'id_suara_abu' => null]);
+            $queryDaftarHitam->where(['id_desa' => $id, 'is_daftar_hitam' => 'iya']);
+            $queryPengkhianat->where(['id_desa' => $id, 'is_pengkhianat' => 'iya']);
+        }
+        $totalKeluargaMendukung = $queryKeluargaMendukung->count();
+        $totalKeluargaTidak = $queryKeluargaTidak->count();
+        $totalSimpatisan = $querySimpatisan->count();
+        $totalSuaraAbu = $querySuaraAbu->count();
+        $totalDaftarHitam = $queryDaftarHitam->count();
+        $totalPengkhianat = $queryPengkhianat->count();
+        $sisa = $totalPemilih - ($totalKeluargaMendukung + $totalKeluargaTidak + $totalSimpatisan + $totalSuaraAbu + $totalDaftarHitam + $totalPengkhianat);
+
+        $hasil = [
+            ['label' => 'Keluarga (Mendukung)', 'value' => $totalKeluargaMendukung],
+            ['label' => 'Keluarga (Tidak mendukung)', 'value' => $totalKeluargaTidak],
+            ['label' => 'Simpatisan', 'value' => $totalSimpatisan],
+            ['label' => 'Suara abu-abu', 'value' => $totalSuaraAbu],
+            ['label' => 'Daftar hitam', 'value' => $totalDaftarHitam],
+            ['label' => 'Pengkhianat', 'value' => $totalPengkhianat],
+            ['label' => 'Tanpa status', 'value' => $sisa]
+        ];
+
+
+        return json_encode([
+            'kode' => 200,
+            'pesan' => 'Data Berhasil Didapatkan',
+            'data' => $hasil,
+            'nama' => isset($nama[0]['nama']) ? $nama[0]['nama'] : '',
+            'total' => $totalPemilih
+        ]);
+    }
+
+    public function listPemilih($id)
+    {
+        $nama = Kecamatan::select(['nama'])->where(['id' => $id])->get()->toArray();
+        $totalPemilih = Desa::where(['id_kecamatan' => $id])
+            ->sum('jumlah_penduduk');
+        $data = Desa::select(['nama', 'jumlah_penduduk'])->where(['id_kecamatan' => $id])->orderByDesc('jumlah_penduduk')->get()->toArray();
+
+        $hasil = '';
+        foreach ($data as $d) {
+            $hasil .= "
+            <li>
+                <span class='ml-2'>" . $d['nama'] . "</span>
+                <span class='pull-right text-success tran-price'>" . $d['jumlah_penduduk'] . " Pemilih</span>
+            </li>";
+        }
+
+        return json_encode([
+            'kode' => 200,
+            'pesan' => 'Data Berhasil Didapatkan',
+            'data' => $hasil,
+            'nama' => isset($nama[0]['nama']) ? $nama[0]['nama'] : '',
+            'total' => $totalPemilih
         ]);
     }
 }

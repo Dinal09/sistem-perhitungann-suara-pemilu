@@ -13,22 +13,24 @@ class TpsController extends Controller
     public $title = 'Tps';
     public $link = 'tps';
 
-    public function index()
+    public function index($id)
     {
-        $data = Tps::select(['tps.*', 'desa.nama AS desa_nama'])
-            ->leftJoin('desa', 'desa.id', '=', 'tps.id_desa')->get();
+        if ($id == 'all') {
+            $data = Tps::select(['tps.*', 'desa.nama AS desa_nama'])
+                ->leftJoin('desa', 'desa.id', '=', 'tps.id_desa')->orderBy('nama')->get();
+        } else {
+            $data = Tps::select(['tps.*', 'desa.nama AS desa_nama'])
+                ->leftJoin('desa', 'desa.id', '=', 'tps.id_desa')->where(['id_desa' => $id])->orderBy('nama')->get();
+        }
 
         $desa = Kecamatan::with('desa')->get();
-        // echo '<pre>';
-        // print_r($desa[0]);
-        // echo '</pre>';
-        // die;
 
         return view('master.' . $this->link, [
             'data' => $data,
             'desa' => $desa,
             'title' => $this->title,
             'link' => $this->link,
+            'filter_id' => $id,
             'explain' => 'Menu yang berisi data ' . $this->link . ', Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);
     }

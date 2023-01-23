@@ -69,7 +69,7 @@ Route::group(['prefix' => 'dapil', 'middleware' => ['auth', 'admin']], function 
 });
 // Master Kecamatan
 Route::group(['prefix' => 'kecamatan', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [KecamatanController::class, 'index']);
+    Route::get('/{id}', [KecamatanController::class, 'index']);
     Route::post('/get-by-id', [KecamatanController::class, 'getById']);
     Route::post('/tambah', [KecamatanController::class, 'create']);
     Route::post('/ubah', [KecamatanController::class, 'update']);
@@ -77,7 +77,7 @@ Route::group(['prefix' => 'kecamatan', 'middleware' => ['auth', 'admin']], funct
 });
 // Master Desa
 Route::group(['prefix' => 'desa', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [DesaController::class, 'index']);
+    Route::get('/{id}', [DesaController::class, 'index']);
     Route::post('/get-by-id', [DesaController::class, 'getById']);
     Route::post('/tambah', [DesaController::class, 'create']);
     Route::post('/ubah', [DesaController::class, 'update']);
@@ -85,7 +85,7 @@ Route::group(['prefix' => 'desa', 'middleware' => ['auth', 'admin']], function (
 });
 // Master Tps
 Route::group(['prefix' => 'tps', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [TpsController::class, 'index']);
+    Route::get('/{id}', [TpsController::class, 'index']);
     Route::post('/get-by-id', [TpsController::class, 'getById']);
     Route::post('/tambah', [TpsController::class, 'create']);
     Route::post('/ubah', [TpsController::class, 'update']);
@@ -158,4 +158,6 @@ Route::group(['prefix' => 'dashboard-caleg', 'middleware' => ['auth', 'caleg']],
     Route::get('/', [DashboardController::class, 'index2']);
     Route::get('/bar-chart-data/{dapil}', [dashboardController::class, 'barChartData']);
     Route::get('/data-kunjungan-per-kecamatan/{id}', [dashboardController::class, 'dataKunjunganPerKecamatan']);
+    Route::get('data-pembagian-pemilih/{jenis}/{id}', [DashboardController::class, 'dataPembagianPemilih']);
+    Route::get('list-pemilih/{id}', [DashboardController::class, 'listPemilih']);
 });

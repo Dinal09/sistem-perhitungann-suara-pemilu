@@ -45,7 +45,7 @@
                                                         class="ti-eye"></i></button>
                                                 <button class="btn btn-warning waves-effect btn-pilih-tps"
                                                     data-id="{{ $d->id }}" data-toggle="modal"
-                                                    data-target="#modal-pilih-tps" title="Ubah Password"><i
+                                                    data-target="#modal-pilih-tps" title="Pilih TPS"><i
                                                         class="ti-map-alt"></i></button>
                                                 <a href="/<?= $link ?>/hapus/{{ $d->id }}"
                                                     class="btn btn-danger waves-effect ladda-button"
