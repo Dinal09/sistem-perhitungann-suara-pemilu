@@ -71,7 +71,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Deskripsi</label>
-                                        <textarea class="form-control autogrow" name="deskripsi" placeholder="Masukkan Deskripsi {{ $title }}"
+                                        <textarea class="form-control autogrow" name="deskripsi" placeholder="Masukkan deskripsi {{ $title }}"
                                             style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" required></textarea>
                                     </div>
                                 </div>
@@ -126,7 +126,6 @@
     </div>
 @endsection
 
-
 @section('add-header')
     <link href="{{ url('/ubold/assets/plugins/custombox/css/custombox.css') }}" rel="stylesheet">
 @endsection
@@ -136,7 +135,7 @@
         $('.btn-ubah').click(function() {
             let id = $(this).data('id')
 
-            $.post('/jenis-suara/get-by-id?id=' + id, {
+            $.post('/jenis-tim-sukses/get-by-id?id=' + id, {
                 '_token': '{{ csrf_token() }}',
                 idJenis: id
             }).done(function(output) {

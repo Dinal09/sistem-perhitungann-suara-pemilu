@@ -15,8 +15,10 @@ use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\KabupatenController;
+use App\Http\Controllers\PemilihJenisController;
 use App\Http\Controllers\TpsController;
 use App\Http\Controllers\SuaraAbuController;
+use App\Http\Controllers\TimSuksesJenisController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,14 +53,6 @@ Route::group(['prefix' => 'pengguna', 'middleware' => ['auth', 'admin']], functi
     Route::post('/tambah', [UsersController::class, 'create']);
     Route::post('/ubah', [UsersController::class, 'update']);
     Route::get('/hapus/{id}', [UsersController::class, 'delete']);
-});
-// Master Jenis Suara
-Route::group(['prefix' => 'jenis-suara', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [JenisSuaraController::class, 'index']);
-    Route::post('/get-by-id', [JenisSuaraController::class, 'getById']);
-    Route::post('/tambah', [JenisSuaraController::class, 'create']);
-    Route::post('/ubah', [JenisSuaraController::class, 'update']);
-    Route::get('/hapus/{id}', [JenisSuaraController::class, 'delete']);
 });
 // Master Dapil
 Route::group(['prefix' => 'dapil', 'middleware' => ['auth', 'admin']], function () {
@@ -100,6 +94,22 @@ Route::group(['prefix' => 'tps', 'middleware' => ['auth', 'admin']], function ()
     Route::post('/ubah', [TpsController::class, 'update']);
     Route::get('/hapus/{id}', [TpsController::class, 'delete']);
 });
+// Master Jenis Suara
+Route::group(['prefix' => 'jenis-suara', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [JenisSuaraController::class, 'index']);
+    Route::post('/get-by-id', [JenisSuaraController::class, 'getById']);
+    Route::post('/tambah', [JenisSuaraController::class, 'create']);
+    Route::post('/ubah', [JenisSuaraController::class, 'update']);
+    Route::get('/hapus/{id}', [JenisSuaraController::class, 'delete']);
+});
+// Master Jenis Pemilih
+Route::group(['prefix' => 'jenis-pemilih', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [PemilihJenisController::class, 'index']);
+    Route::post('/get-by-id', [PemilihJenisController::class, 'getById']);
+    Route::post('/tambah', [PemilihJenisController::class, 'create']);
+    Route::post('/ubah', [PemilihJenisController::class, 'update']);
+    Route::get('/hapus/{id}', [PemilihJenisController::class, 'delete']);
+});
 // Master Suara Abu
 Route::group(['prefix' => 'suara-abu', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', [SuaraAbuController::class, 'index']);
@@ -107,6 +117,14 @@ Route::group(['prefix' => 'suara-abu', 'middleware' => ['auth', 'admin']], funct
     Route::post('/tambah', [SuaraAbuController::class, 'create']);
     Route::post('/ubah', [SuaraAbuController::class, 'update']);
     Route::get('/hapus/{id}', [SuaraAbuController::class, 'delete']);
+});
+// Master Jenis Tim Sukses
+Route::group(['prefix' => 'jenis-tim-sukses', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [TimSuksesJenisController::class, 'index']);
+    Route::post('/get-by-id', [TimSuksesJenisController::class, 'getById']);
+    Route::post('/tambah', [TimSuksesJenisController::class, 'create']);
+    Route::post('/ubah', [TimSuksesJenisController::class, 'update']);
+    Route::get('/hapus/{id}', [TimSuksesJenisController::class, 'delete']);
 });
 
 // Data Umum

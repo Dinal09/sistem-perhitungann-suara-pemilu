@@ -136,7 +136,7 @@
         $('.btn-ubah').click(function() {
             let id = $(this).data('id')
 
-            $.post('/jenis-suara/get-by-id?id=' + id, {
+            $.post('/jenis-pemilih/get-by-id?id=' + id, {
                 '_token': '{{ csrf_token() }}',
                 idJenis: id
             }).done(function(output) {

@@ -33,7 +33,9 @@
                             Master Suara </span> <span class="menu-arrow"></span> </a>
                     <ul class="list-unstyled">
                         <li><a href="/jenis-suara">Jenis Suara</a></li>
+                        <li><a href="/jenis-pemilih">Jenis Pemilih</a></li>
                         <li><a href="/suara-abu">Suara Abu-abu</a></li>
+                        <li><a href="/jenis-tim-sukses">Tim Sukses</a></li>
                     </ul>
                 </li>
 
