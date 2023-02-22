@@ -15,4 +15,9 @@ class TimSuksesJenis extends Model
         'updated_at'
     ];
     public $timestamp = TRUE;
+
+    public function typePemilih()
+    {
+        return $this->belongsTo(TypePemilih::class, 'id_tim_sukses', 'id');
+    }
 }

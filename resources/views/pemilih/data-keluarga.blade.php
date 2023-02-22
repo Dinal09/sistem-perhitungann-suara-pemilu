@@ -51,16 +51,16 @@
                             <tr>
                                 <td>
                                     <div class="btn-group m-b-20">
-                                        <a href="/<?= $link ?>/hapus/{{ $d->id }}"
+                                        <a href="/<?= $link ?>/hapus/{{ $d['id'] }}"
                                             class="btn btn-danger waves-effect ladda-button" data-style="slide-right"
                                             title="Hapus Data"><i class="ti-trash"></i></a>
                                     </div>
                                 </td>
-                                <td> {{ $d->nama }} </td>
-                                <td> {{ $d->no_nik }} </td>
-                                <td> {{ $d->alamat }} </td>
-                                <td> {{ $d->no_hp }} </td>
-                                <td> {{ $d->is_keluarga == 'keluarga-mendukung' ? 'Mendukung' : 'Tidak Menudukung' }} </td>
+                                <td> {{ $d['nama'] }} </td>
+                                <td> {{ $d['no_nik'] }} </td>
+                                <td> {{ $d['alamat'] }} </td>
+                                <td> {{ $d['no_hp'] }} </td>
+                                <td> {{ $d['deskripsi'] }} </td>
                             </tr>
                             <?php endforeach ?>
                         </tbody>

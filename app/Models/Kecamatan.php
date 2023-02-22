@@ -26,4 +26,8 @@ class Kecamatan extends Model
     {
         return $this->hasMany(Desa::class, 'id_kecamatan', 'id');
     }
+    public function typePemilih()
+    {
+        return $this->belongsTo(TypePemilih::class, 'id_kecamatan', 'id');
+    }
 }

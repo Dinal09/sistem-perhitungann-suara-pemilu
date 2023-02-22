@@ -18,37 +18,22 @@ class DataKeluargaController extends Controller
     {
         $pemilih = array();
         if ($id == 'all') {
-            $data = Pemilih::getKeluarga();
+            $data = Pemilih::select(['pemilih.id', 'pemilih.nama', 'pemilih.no_nik', 'pemilih.alamat', 'pemilih.no_hp', 'jenis_keluarga.deskripsi'])
+                ->join('type_pemilih', 'type_pemilih.id_pemilih', '=', 'pemilih.id')
+                ->join('jenis_keluarga', 'jenis_keluarga.id', '=', 'type_pemilih.id_keluarga')
+                ->whereNotNull('type_pemilih.id_keluarga')
+                ->get()->toArray();
             $dataDesa = null;
             $pemilih = array();
         } else {
-            $data = Pemilih::getKeluarga($id);
-            $dataDesa = Desa::find(['id' => $id])->toArray();
-            $pemilihData = Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
-                ->leftJoin('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')
-                ->where([
-                    'pemilih.id_desa' => $id,
-                ])
-                ->whereNotIn('is_keluarga', ['keluarga-mendukung', 'keluarga-tidak'])
+            $data = Pemilih::select(['pemilih.id', 'pemilih.nama', 'pemilih.no_nik', 'pemilih.alamat', 'pemilih.no_hp', 'jenis_keluarga.deskripsi'])
+                ->join('type_pemilih', 'type_pemilih.id_pemilih', '=', 'pemilih.id')
+                ->join('jenis_keluarga', 'jenis_keluarga.id', '=', 'type_pemilih.id_keluarga')
+                ->whereNotNull('type_pemilih.id_keluarga')
+                ->where(['pemilih.id_desa' => $id])
                 ->get()->toArray();
-
-            foreach ($pemilihData as $idx => $pem) {
-                if ($pem['is_keluarga'] != 'tidak') {
-                    $status = 'Keluarga';
-                } elseif ($pem['is_simpatisan'] == 'iya') {
-                    $status = 'Simpatisan';
-                } elseif ($pem['is_pengkhianat'] == 'iya') {
-                    $status = 'Pengkhianat';
-                } elseif ($pem['is_daftar_hitam'] == 'iya') {
-                    $status = 'Daftar Hitam';
-                } elseif ($pem['id_suara_abu'] != null) {
-                    $status = 'Suara Abu-abu ';
-                } else {
-                    $status = '';
-                }
-                $pemilih[$idx]['id'] = $pem['id'];
-                $pemilih[$idx]['nama'] = $pem['nama'] . ' | ' . $status;
-            }
+            $dataDesa = Desa::find(['id' => $id])->toArray();
+            $pemilih = array();
         }
         $selectDesa = Kecamatan::with('desa')->get();
         return view('pemilih.' . $this->link, [

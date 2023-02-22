@@ -26,4 +26,8 @@ class Kabupaten extends Model
     {
         return $this->hasMany(Kecamatan::class, 'id_kabupaten', 'id');
     }
+    public function typePemilih()
+    {
+        return $this->belongsTo(TypePemilih::class, 'id_kabupaten', 'id');
+    }
 }

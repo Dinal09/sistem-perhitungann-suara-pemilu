@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dapil;
 use App\Models\Desa;
+use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\Pemilih;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class DataKunjunganController extends Controller
 
     public function index($kec)
     {
-        $dataKecamatan = Dapil::with('kecamatan')->get();
+        $dataKecamatan = Kabupaten::with('kecamatan')->get();
         $kecamatan = array();
         $persen = array();
 
@@ -45,7 +45,7 @@ class DataKunjunganController extends Controller
             'title' => $this->title,
             'link' => $this->link,
             'kecamatan' => $kecamatan,
-            'dapil' => $dataKecamatan,
+            'kabupaten' => $dataKecamatan,
             'persen' => $persen,
             'explain' => 'Menu yang berisi data semua desa yang akan dikunjungi, Terdapat Juga Fitur Tambah, Update, Hapus dan Export Ke berbagai
                             tipe file yang diinginkan'

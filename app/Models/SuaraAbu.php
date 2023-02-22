@@ -15,4 +15,9 @@ class SuaraAbu extends Model
         'updated_at'
     ];
     public $timestamp = TRUE;
+
+    public function typePemilih()
+    {
+        return $this->belongsTo(TypePemilih::class, 'id_suara_abu', 'id');
+    }
 }

@@ -44,4 +44,8 @@ class Pemilih extends Model
     {
         return $this->belongsTo(Desa::class, 'id_desa', 'id');
     }
+    public function typePemilih()
+    {
+        return $this->hasMany(typePemilih::class, 'id_pemilih', 'id');
+    }
 }

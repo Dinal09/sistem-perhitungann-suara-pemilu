@@ -17,11 +17,11 @@ class DataUmumController extends Controller
     public function index($id)
     {
         if ($id == 'all') {
-            $data = Pemilih::with('desa', 'tps', 'suaraAbu')->get();
+            $data = Pemilih::with('desa', 'tps')->get();
             $dataDesa = null;
             $tps = array();
         } else {
-            $data = Pemilih::with('desa', 'tps', 'suaraAbu')->where(['pemilih.id_desa' => $id])->get();
+            $data = Pemilih::with('desa', 'tps')->where(['pemilih.id_desa' => $id])->get();
             $dataDesa = Desa::find(['id' => $id])->toArray();
             $tps = Tps::where(['id_desa' => $id])->get();
         }
@@ -44,7 +44,7 @@ class DataUmumController extends Controller
     public function getById(Request $request)
     {
         $id = $request->id;
-        $data = Pemilih::with('tps.desa.kecamatan.dapil')->find($id);
+        $data = Pemilih::with('tps.desa.kecamatan.kabupaten')->find($id);
 
         if ($data) {
             return json_encode([
@@ -64,7 +64,7 @@ class DataUmumController extends Controller
     public function getDataById(Request $request)
     {
         $id = $request->id;
-        $data = Pemilih::with('tps.desa.kecamatan.dapil')->find($id);
+        $data = Pemilih::with('tps.desa.kecamatan.kabupaten')->find($id);
 
         if ($data) {
             return json_encode([
@@ -84,7 +84,7 @@ class DataUmumController extends Controller
     public function getFotoById(Request $request)
     {
         $id = $request->id;
-        $data = Pemilih::with('tps.desa.kecamatan.dapil')->find($id);
+        $data = Pemilih::with('tps.desa.kecamatan.kabupaten')->find($id);
 
         if ($request->jenis == 'ktp') {
             $foto = asset('storage/data-aplikasi/foto-ktp/' . $data->foto_ktp);

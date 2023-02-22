@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PemilihJenis extends Model
+class JenisSaksi extends Model
 {
     use HasFactory;
-    protected $table = 'pemilih_jenis';
+    protected $table = 'jenis_saksi';
     protected $fillable = [
         'deskripsi',
         'created_at',
@@ -18,6 +18,6 @@ class PemilihJenis extends Model
 
     public function typePemilih()
     {
-        return $this->belongsTo(TypePemilih::class, 'id_jenis_pemilih', 'id');
+        return $this->belongsTo(TypePemilih::class, 'id_saksi', 'id');
     }
 }

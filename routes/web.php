@@ -157,20 +157,6 @@ Route::group(['prefix' => 'data-simpatisan', 'middleware' => ['auth', 'admin']],
     Route::post('/ubah', [DataSimpatisanController::class, 'update']);
     Route::get('/hapus/{id}', [DataSimpatisanController::class, 'delete']);
 });
-// Data Pengkhianat
-Route::group(['prefix' => 'data-pengkhianat', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/{id}', [DataPengkhianatController::class, 'index']);
-    Route::post('/get-pemilih-by-desa', [DataPengkhianatController::class, 'getPemilihByDesa']);
-    Route::post('/ubah', [DataPengkhianatController::class, 'update']);
-    Route::get('/hapus/{id}', [DataPengkhianatController::class, 'delete']);
-});
-// Daftar Hitam
-Route::group(['prefix' => 'daftar-hitam', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/{id}', [DaftarHitamController::class, 'index']);
-    Route::post('/get-pemilih-by-desa', [DaftarHitamController::class, 'getPemilihByDesa']);
-    Route::post('/ubah', [DaftarHitamController::class, 'update']);
-    Route::get('/hapus/{id}', [DaftarHitamController::class, 'delete']);
-});
 // Data Suara Abu-abu
 Route::group(['prefix' => 'data-suara-abu', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/{id}', [DataSuaraAbuController::class, 'index']);

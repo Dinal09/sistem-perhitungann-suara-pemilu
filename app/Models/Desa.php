@@ -32,4 +32,8 @@ class Desa extends Model
     {
         return $this->hasMany(Pemilih::class, 'id_desa', 'id');
     }
+    public function typePemilih()
+    {
+        return $this->belongsTo(TypePemilih::class, 'id_desa', 'id');
+    }
 }

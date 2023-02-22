@@ -17,7 +17,7 @@
                             <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_kecamatan"
                                 id="ubah-id-kecamatan" required>
                                 <option>--- Pilih Kecamatan ---</option>
-                                <?php foreach($dapil as $dap): ?>
+                                <?php foreach($kabupaten as $dap): ?>
                                 <optgroup label=" {{ $dap->nama }} ">
                                     <?php foreach ($dap->kecamatan as $kec): ?>
                                     <option value={{ $kec->id }}> {{ $kec->nama }} </option>

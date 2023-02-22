@@ -61,29 +61,6 @@
                                         $lahir = DateTime::createFromFormat('m.d.Y', $tgl);
                                         $sekarang = DateTime::createFromFormat('m.d.Y', date('m.d.Y'));
                                         $umur = $sekarang->diff($lahir);
-                                    }
-                                    $jenis = [];
-                                    $jenis[0] = '-';
-                                    if ($d->is_keluarga != 'tidak') {
-                                        if ($d->is_keluarga == 'keluarga-mendukung') {
-                                            $jenis[0] = 'Keluarga | Mendukung';
-                                            $jenis[1] = 'primary';
-                                        } else {
-                                            $jenis[0] = 'Keluarga | Tidak Mendukung';
-                                            $jenis[1] = 'warning';
-                                        }
-                                    } elseif ($d->is_simpatisan == 'iya') {
-                                        $jenis[0] = 'Simpatisan';
-                                        $jenis[1] = 'success';
-                                    } elseif ($d->is_pengkhianat == 'iya') {
-                                        $jenis[0] = 'Pengkhianat';
-                                        $jenis[1] = 'danger';
-                                    } elseif ($d->is_daftar_hitam == 'iya') {
-                                        $jenis[0] = 'Daftar Hitam';
-                                        $jenis[1] = 'inverse';
-                                    } elseif (!is_null($d->id_suara_abu)) {
-                                        $jenis[0] = 'Suara Abu-abu';
-                                        $jenis[1] = 'default';
                                     } ?>
 
                                     <tr>
@@ -111,9 +88,9 @@
                                         </td>
                                         <td> {{ $d->no_hp }} </td>
                                         <td> {{ isset($d->tps->nama) ? $d->tps->nama : '-' }} </td>
-                                        <td><span
-                                                class="label label-{{ isset($jenis[1]) ? $jenis[1] : 'white' }}">{{ $jenis[0] }}
-                                            </span></td>
+                                        <td>
+                                            <span class="label label-"></span>
+                                        </td>
                                         <td><span
                                                 class="label label-{{ $d->is_kunjungan == 'sudah' ? 'primary' : 'danger' }}">
                                                 {{ $d->is_kunjungan == 'sudah' ? 'Sudah' : 'Belum' }} </span></td>

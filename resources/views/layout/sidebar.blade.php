@@ -59,8 +59,8 @@
                         <li><a href="/data-keluarga/all">Data Keluarga</a></li>
                         <li><a href="/data-simpatisan/all">Data Simpatisan</a></li>
                         <li><a href="/data-suara-abu/all">Data Suara Abu-abu</a></li>
-                        <li><a href="/data-pengkhianat/all">Data Pengkhianat</a></li>
-                        <li><a href="/daftar-hitam/all">Data Daftar Hitam</a></li>
+                        <li><a href="/data-tim-sukses/all">Data Tim Sukses</a></li>
+                        <li><a href="/daftar-saksi/all">Data Saksi</a></li>
                     </ul>
                 </li>
 
