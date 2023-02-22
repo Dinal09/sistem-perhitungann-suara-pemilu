@@ -17,8 +17,8 @@ class Dapil extends Model
     public $timestamp = TRUE;
 
 
-    public function kecamatan()
+    public function kabupaten()
     {
-        return $this->hasMany(Kecamatan::class, 'id_dapil', 'id')->orderBy('nama');
+        return $this->hasMany(Kabupaten::class, 'id_dapil', 'id')->orderBy('nama');
     }
 }

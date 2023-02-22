@@ -14,16 +14,28 @@ class DataUmumController extends Controller
     public $title = 'Data Umum';
     public $link = 'data-umum';
 
-    public function index()
+    public function index($id)
     {
-        $data = Pemilih::with('tps.desa.kecamatan.dapil')->get();
-        $desa = Desa::with('tps')->get();
+        if ($id == 'all') {
+            $data = Pemilih::with('desa', 'tps', 'suaraAbu')->get();
+            $dataDesa = null;
+            $tps = array();
+        } else {
+            $data = Pemilih::with('desa', 'tps', 'suaraAbu')->where(['pemilih.id_desa' => $id])->get();
+            $dataDesa = Desa::find(['id' => $id])->toArray();
+            $tps = Tps::where(['id_desa' => $id])->get();
+        }
+
+        $selectDesa = Kecamatan::with('desa')->get();
 
         return view('pemilih.' . $this->link, [
             'data' => $data,
-            'title' => $this->title,
+            'title' => $this->title . (isset($dataDesa[0]) ? ' Desa ' . $dataDesa[0]['nama'] : ''),
             'link' => $this->link,
-            'desa' => $desa,
+            'tps' => $tps,
+            'selectDesa' => $selectDesa,
+            'dataDesa' => $dataDesa,
+            'filter_id' => $id,
             'explain' => 'Menu yang berisi data semua pemilih yang memiliki hak suara, Terdapat Juga Fitur Tambah, Update, Hapus dan Export Ke berbagai
                             tipe file yang diinginkan'
         ]);
@@ -97,44 +109,53 @@ class DataUmumController extends Controller
     public function create(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'no_nik' => 'required|unique:pemilih',
-            'no_kk' => 'required',
             'nama' => 'required',
-            'tempat_lahir' => 'required',
-            'tanggal_lahir' => 'required',
             'no_hp' => 'required',
             'alamat' => 'required',
-            'foto' => 'required|image|mimes:jpg,png,jpeg,svg|max:2048',
-            'foto_ktp' => 'required|image|mimes:jpg,png,jpeg,svg|max:2048',
-            'foto_kk' => 'required|image|mimes:jpg,png,jpeg,svg|max:2048',
+            'foto' => 'image|mimes:jpg,png,jpeg,svg|max:2048',
+            'foto_ktp' => 'image|mimes:jpg,png,jpeg,svg|max:2048',
+            'foto_kk' => 'image|mimes:jpg,png,jpeg,svg|max:2048',
         ]);
         if ($validate->fails()) {
             return redirect()->back()->with('error', $validate->errors()->first());
         }
 
-        $simpanFoto = $request->file('foto')->store('/public/data-aplikasi/foto-pemilih');
-        $simpanFotoKtp = $request->file('foto_ktp')->store('/public/data-aplikasi/foto-ktp');
-        $simpanFotoKK = $request->file('foto_kk')->store('/public/data-aplikasi/foto-kk');
-
-        if ($simpanFoto && $simpanFotoKtp && $simpanFotoKK) {
-            $data = $request->all();
-
+        $data = $request->all();
+        if (isset($data['foto'])) {
+            $simpanFoto = $request->file('foto')->store('/public/data-aplikasi/foto-pemilih');
             $linkFoto = explode('/', $simpanFoto);
-            $linkFotoKtp = explode('/', $simpanFotoKtp);
-            $linkFotoKK = explode('/', $simpanFotoKK);
-
             $data['foto'] = $linkFoto[3];
-            $data['foto_ktp'] = $linkFotoKtp[3];
-            $data['foto_kk'] = $linkFotoKK[3];
-            unset($data['_token']);
 
-            // return json_encode($data);
-            Pemilih::create($data);
-
-            return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
-        } else {
-            return redirect()->back()->with('error', $this->title . ' Gagal Disimpan');
+            if (!$simpanFoto) {
+                return redirect()->back()->with('error', $this->title . ' Gagal Disimpan');
+            }
         }
+        if (isset($data['foto_ktp'])) {
+            $simpanFotoKtp = $request->file('foto_ktp')->store('/public/data-aplikasi/foto-ktp');
+            $linkFotoKtp = explode('/', $simpanFotoKtp);
+            $data['foto_ktp'] = $linkFotoKtp[3];
+
+            if (!$simpanFotoKtp) {
+                return redirect()->back()->with('error', $this->title . ' Gagal Disimpan');
+            }
+        }
+        if (isset($data['foto_kk'])) {
+            $simpanFotoKK = $request->file('foto_kk')->store('/public/data-aplikasi/foto-kk');
+            $linkFotoKK = explode('/', $simpanFotoKK);
+            $data['foto_kk'] = $linkFotoKK[3];
+
+            if (!$simpanFotoKK) {
+                return redirect()->back()->with('error', $this->title . ' Gagal Disimpan');
+            }
+        }
+        if (isset($data['is_kunjungan'])) {
+            $data['is_kunjungan'] = 'sudah';
+        }
+        unset($data['_token']);
+
+        Pemilih::create($data);
+
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
     }
 
     public function update(Request $request)
@@ -181,6 +202,9 @@ class DataUmumController extends Controller
                 ->where('tps.id', $request->id_tps)->get()->toArray();
             $ubahJumlah = ['jumlah_penduduk' => ($desa2[0]['jumlah_penduduk'] + 1)];
             Desa::where('id', $desa2[0]['id_desa'])->update($ubahJumlah);
+        }
+        if (isset($data['is_kunjungan'])) {
+            $data['is_kunjungan'] = 'sudah';
         }
 
         unset($data['_token']);

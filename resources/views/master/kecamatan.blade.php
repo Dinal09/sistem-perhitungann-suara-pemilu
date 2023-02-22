@@ -20,12 +20,17 @@
                         <div class="col-lg-4">
                             <div class="form-group no-margin">
                                 <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_dapil"
-                                    id="filter-dapil" required>
+                                    id="filter-kabupaten" required>
                                     <option value="all" <?= $filter_id == 'all' ? 'selected' : '' ?>>Semua Data</option>
-                                    <?php foreach($dapil as $dap): ?>
-                                    <option value={{ $dap->id }} <?= $filter_id == $dap->id ? 'selected' : '' ?>>
-                                        {{ $dap->nama }} </option>
-                                    <?php endforeach ?>
+                                    @foreach ($kabupaten as $dap)
+                                        <optgroup label=" {{ $dap->nama }} ">
+                                            @foreach ($dap->kabupaten as $kec)
+                                                <option value={{ $kec->id }}
+                                                    <?= $filter_id == $kec->id ? 'selected' : '' ?>>
+                                                    {{ $kec->nama }} </option>
+                                            @endforeach
+                                    @endforeach
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -35,8 +40,8 @@
                             <tr>
                                 <th>Aksi</th>
                                 <th>Nama</th>
-                                <th>Dapil</th>
-                                <th>Tanggal</th>
+                                <th>Kabupaten</th>
+                                <th>Desa</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,17 +49,24 @@
                             <tr>
                                 <td>
                                     <div class="btn-group m-b-20">
-                                        <button class="btn btn-info waves-effect btn-ubah" data-id="{{ $d->id }}"
+                                        <button class="btn btn-info waves-effect btn-ubah" data-id="{{ $d['id'] }}"
                                             data-toggle="modal" data-target="#modal-edit" title="Ubah Data"><i
                                                 class="ti-pencil-alt"></i></button>
-                                        <a href="/<?= $link ?>/hapus/{{ $d->id }}"
+                                        <a href="/<?= $link ?>/hapus/{{ $d['id'] }}"
                                             class="btn btn-danger waves-effect ladda-button" data-style="slide-right"
                                             title="Hapus Data"><i class="ti-trash"></i></a>
                                     </div>
                                 </td>
-                                <td> {{ $d->nama }} </td>
-                                <td> {{ $d->dapil_nama }} </td>
-                                <td> {{ is_null($d->created_at) ? '-' : date('d-m-Y H:i:s', strtotime($d->created_at)) }}
+                                <td> {{ $d['nama'] }} </td>
+                                <td> {{ $d['kabupaten_nama'] }} </td>
+                                <td>
+                                    @if (count($d['desa']) == 0)
+                                        -
+                                    @else
+                                        @foreach ($d['desa'] as $k)
+                                            <span class="badge badge-secondary">{{ $k['nama'] }}</span>
+                                        @endforeach
+                                    @endif
                                 </td>
                             </tr>
                             <?php endforeach ?>
@@ -83,11 +95,16 @@
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Dapil</label>
                                         <select class="selectpicker" data-live-search="true" data-style="btn-white"
-                                            name="id_dapil" required>
+                                            name="id_kabupaten" required>
                                             <option>--- Pilih Dapil ---</option>
-                                            <?php foreach($dapil as $dap): ?>
-                                            <option value={{ $dap->id }}> {{ $dap->nama }} </option>
-                                            <?php endforeach ?>
+                                            @foreach ($kabupaten as $dap)
+                                                <optgroup label=" {{ $dap->nama }} ">
+                                                    @foreach ($dap->kabupaten as $kec)
+                                                        <option value={{ $kec->id }}
+                                                            <?= $filter_id == $kec->id ? 'selected' : '' ?>>
+                                                            {{ $kec->nama }} </option>
+                                                    @endforeach
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group no-margin">
@@ -127,11 +144,16 @@
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Dapil</label>
                                         <select class="selectpicker" data-live-search="true" data-style="btn-white"
-                                            name="id_dapil" id="ubah-id_dapil" required>
+                                            name="id_kabupaten" id="ubah-id_kabupaten" required>
                                             <option>--- Pilih Dapil ---</option>
-                                            <?php foreach($dapil as $dap): ?>
-                                            <option value={{ $dap->id }}> {{ $dap->nama }} </option>
-                                            <?php endforeach ?>
+                                            @foreach ($kabupaten as $dap)
+                                                <optgroup label=" {{ $dap->nama }} ">
+                                                    @foreach ($dap->kabupaten as $kec)
+                                                        <option value={{ $kec->id }}
+                                                            <?= $filter_id == $kec->id ? 'selected' : '' ?>>
+                                                            {{ $kec->nama }} </option>
+                                                    @endforeach
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group no-margin">
@@ -263,7 +285,7 @@
                     )
 
                     $('#ubah-nama').val(result.data.nama)
-                    $('#ubah-id_dapil').val(result.data.dapil_id).trigger('change')
+                    $('#ubah-id_kabupaten').val(result.data.kabupaten_id).trigger('change')
                     $('#ubah-id').val(result.data.id)
                 } else {
                     $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
@@ -273,7 +295,7 @@
             })
         })
 
-        $('#filter-dapil').change(function() {
+        $('#filter-kabupaten').change(function() {
             let id = $(this).val()
 
             window.location.href = '/kecamatan/' + id

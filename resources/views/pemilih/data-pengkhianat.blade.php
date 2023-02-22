@@ -9,11 +9,33 @@
                     <p class="text-muted font-13 m-b-30">
                         {{ $explain }}</code>.
                     </p>
-                    <a href="#custom-modal-tambah" class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
-                        data-toggle="modal" data-target="#modal-tambah">
-                        <span class="btn-label"><i class="fa fa-plus"></i></span>
-                        Tambah Data
-                    </a>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <a href="#custom-modal-tambah" class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
+                                id="btn-tambah-pemilih">
+                                <span class="btn-label"><i class="fa fa-plus"></i></span>
+                                Tambah Data
+                            </a>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group no-margin">
+                                <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_desa"
+                                    id="filter-desa" required>
+                                    <option value="all" <?= $filter_id == 'all' ? 'selected' : '' ?>>Semua Desa
+                                    </option>
+                                    <?php foreach($selectDesa as $dap): ?>
+                                    <optgroup label=" {{ $dap->nama }} ">
+                                        <?php foreach ($dap->desa as $des): ?>
+                                        <option value={{ $des->id }} <?= $filter_id == $des->id ? 'selected' : '' ?>>
+                                            {{ $des->nama }} </option>
+                                        <?php endforeach ?>
+                                    </optgroup>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <table id="datatable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
@@ -65,20 +87,15 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Desa</label>
+                                        <label for="field-7" class="control-label">Pemilih</label>
                                         <select class="selectpicker" data-live-search="true" data-style="btn-white"
-                                            name="id_desa" id="id_desa" required>
-                                            <option>--- Pilih Desa ---</option>
-                                            <?php foreach($desa as $des): ?>
-                                            <option value={{ $des->id }}> {{ $des->nama }} </option>
+                                            name="id_pemilih" id="id_pemilih" required>
+                                            <option>--- Pilih Pemilih ---</option>
+                                            <?php foreach($pemilih as $pem): ?>
+                                            <option value={{ $pem['id'] }}> {{ $pem['nama'] }} </option>
                                             <?php endforeach ?>
                                         </select>
-                                    </div>
-                                    <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Pemilih</label>
-                                        <select class="form-control select2" name="id_pemilih" id="id_pemilih" required>
-                                            <option>--- Pilih Pemilih ---</option>
-                                        </select>
+                                        <input type="hidden" name="id_desa" id="id_desa_tambah" value="<?= $filter_id ?>">
                                     </div>
                                 </div>
                             </div>
@@ -190,29 +207,23 @@
         });
         TableManageButtons.init();
 
-        $('#id_desa').change(function() {
+        $('#filter-desa').change(function() {
             let id = $(this).val()
 
-            $.post('/data-pengkhianat/get-pemilih-by-desa', {
-                '_token': '{{ csrf_token() }}',
-                idDesa: id
-            }).done(function(output) {
-                let result = $.parseJSON(output);
-                console.log(result)
-                if (result.kode == 200) {
-                    $.Notification.autoHideNotify('success', 'top right', 'Berhasil...!!',
-                        result.pesan
-                    )
+            window.location.href = '/data-pengkhianat/' + id
+        })
 
-                    $('#id_pemilih').html(result.option)
-                } else {
-                    $.Notification.autoHideNotify('warning', 'top right', 'Berhasil...!!',
-                        result.pesan
-                    )
+        $('#btn-tambah-pemilih').click(function(event) {
+            event.preventDefault();
 
-                    $('#id_pemilih').html(result.option)
-                }
-            })
+            let id_desa = $('#id_desa_tambah').val()
+            if (id_desa == 'all') {
+                $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
+                    "Pilih Desa Terlebih Dahulu Sebelum Menambah Pemilih"
+                )
+            } else {
+                $('#modal-tambah').modal('show')
+            }
         })
     </script>
 @endsection

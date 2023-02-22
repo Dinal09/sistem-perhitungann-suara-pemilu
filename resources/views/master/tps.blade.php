@@ -42,7 +42,6 @@
                                 <th>Nama</th>
                                 <th>Desa</th>
                                 <th>Kecamatan</th>
-                                <th>Dapil</th>
                                 <th>Tanggal</th>
                             </tr>
                         </thead>
@@ -62,7 +61,6 @@
                                 <td> {{ $d->nama }} </td>
                                 <td> {{ $d->desa->nama }} </td>
                                 <td> {{ $d->desa->kecamatan->nama }} </td>
-                                <td> {{ $d->desa->kecamatan->dapil->nama }} </td>
                                 <td> {{ is_null($d->created_at) ? '-' : date('d-m-Y H:i:s', strtotime($d->created_at)) }}
                                 </td>
                             </tr>

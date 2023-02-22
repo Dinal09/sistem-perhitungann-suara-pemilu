@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Desa;
 use App\Models\Dapil;
+use App\Models\Kabupaten;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,11 +16,15 @@ class DesaController extends Controller
     public function index($id)
     {
         if ($id == 'all') {
-            $data = Desa::with('kecamatan.dapil')->orderBy('nama')->get();
+            $data = Desa::with(['kecamatan.kabupaten', 'tps' => function ($q) {
+                $q->select(['id_desa', 'nama']);
+            }])->orderBy('nama')->get();
         } else {
-            $data = Desa::with('kecamatan.dapil')->orderBy('nama')->where(['id_kecamatan' => $id])->get();
+            $data = Desa::with(['kecamatan.kabupaten', 'tps' => function ($q) {
+                $q->select(['id_desa', 'nama']);
+            }])->orderBy('nama')->where(['id_kecamatan' => $id])->get();
         }
-        $kecamatan = Dapil::with('kecamatan')->get();
+        $kecamatan = Kabupaten::with('kecamatan')->get();
 
         return view('master.' . $this->link, [
             'data' => $data,

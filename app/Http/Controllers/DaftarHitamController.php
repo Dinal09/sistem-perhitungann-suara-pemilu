@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Desa;
+use App\Models\Kecamatan;
 use App\Models\Pemilih;
 use DateTime;
 use Illuminate\Http\Request;
@@ -13,14 +14,49 @@ class DaftarHitamController extends Controller
     public $title = 'Daftar Hitam';
     public $link = 'daftar-hitam';
 
-    public function index()
+    public function index($id)
     {
-        $data = Pemilih::getDaftarHitam();
-        $desa = Desa::get();
+        $pemilih = array();
+        if ($id == 'all') {
+            $data = Pemilih::getPengkhianat();
+            $dataDesa = null;
+            $pemilih = array();
+        } else {
+            $data = Pemilih::getPengkhianat($id);
+            $dataDesa = Desa::find(['id' => $id])->toArray();
+            $pemilihData = Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
+                ->leftJoin('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')
+                ->where([
+                    'pemilih.id_desa' => $id,
+                ])
+                ->whereNotIn('is_daftar_hitam', ['iya'])
+                ->get()->toArray();
+
+            foreach ($pemilihData as $idx => $pem) {
+                if ($pem['is_keluarga'] != 'tidak') {
+                    $status = 'Keluarga';
+                } elseif ($pem['is_simpatisan'] == 'iya') {
+                    $status = 'Simpatisan';
+                } elseif ($pem['is_pengkhianat'] == 'iya') {
+                    $status = 'Pengkhianat';
+                } elseif ($pem['is_daftar_hitam'] == 'iya') {
+                    $status = 'Daftar Hitam';
+                } elseif ($pem['id_suara_abu'] != null) {
+                    $status = 'Suara Abu-abu ';
+                } else {
+                    $status = '';
+                }
+                $pemilih[$idx]['id'] = $pem['id'];
+                $pemilih[$idx]['nama'] = $pem['nama'] . ' | ' . $status;
+            }
+        }
+        $selectDesa = Kecamatan::with('desa')->get();
         return view('pemilih.' . $this->link, [
             'data' => $data,
-            'desa' => $desa,
-            'title' => $this->title,
+            'pemilih' => $pemilih,
+            'selectDesa' => $selectDesa,
+            'filter_id' => $id,
+            'title' => $this->title . (isset($dataDesa[0]) ? ' Desa ' . $dataDesa[0]['nama'] : ''),
             'link' => $this->link,
             'explain' => 'Menu yang berisi data pemilih yang dikategorikan sebagai daftar hitam, Terdapat Juga Fitur Tambah, Update dan Hapus'
         ]);

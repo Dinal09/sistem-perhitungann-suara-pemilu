@@ -42,7 +42,7 @@
                                 <th>Kecamatan</th>
                                 <th>Dapil</th>
                                 <th>Jumlah Penduduk</th>
-                                <th>Tanggal</th>
+                                <th>TPS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,10 +60,17 @@
                                 </td>
                                 <td> {{ $d->nama }} </td>
                                 <td> {{ 'Kecamatan ' . $d->kecamatan->nama }} </td>
-                                <td> {{ 'Dapil ' . $d->kecamatan->dapil->nama }} </td>
+                                <td> {{ 'Dapil ' . $d->kecamatan->kabupaten->nama }} </td>
                                 <td> {{ is_null($d->jumlah_penduduk) ? 'Belum Diinputkan' : $d->jumlah_penduduk . ' Penduduk' }}
                                 </td>
-                                <td> {{ is_null($d->created_at) ? '-' : date('d-m-Y H:i:s', strtotime($d->created_at)) }}
+                                <td>
+                                    @if (count($d['tps']) == 0)
+                                        TPS Belum Ditambahkan
+                                    @else
+                                        @foreach ($d['tps'] as $k)
+                                            <span class="badge badge-secondary">{{ $k['nama'] }}</span>
+                                        @endforeach
+                                    @endif
                                 </td>
                             </tr>
                             <?php endforeach ?>

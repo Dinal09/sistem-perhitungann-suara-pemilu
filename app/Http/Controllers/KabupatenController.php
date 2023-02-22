@@ -2,37 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kecamatan;
 use App\Models\Dapil;
+use App\Models\Kabupaten;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class KecamatanController extends Controller
+class KabupatenController extends Controller
 {
-    public $title = 'Kecamatan';
-    public $link = 'kecamatan';
+    public $title = 'Kabupaten';
+    public $link = 'kabupaten';
 
     public function index($id)
     {
         if ($id == 'all') {
-            $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'kabupaten.nama AS kabupaten_nama'])
-                ->leftJoin('kabupaten', 'kabupaten.id', '=', 'kecamatan.id_kabupaten')
-                ->with(['desa' => function ($q) {
-                    $q->select(['id_kecamatan', 'nama']);
+            $data = Kabupaten::select(['kabupaten.id', 'kabupaten.nama', 'dapil.nama AS dapil_nama'])
+                ->leftJoin('dapil', 'dapil.id', '=', 'kabupaten.id_dapil')
+                ->with(['kecamatan' => function ($q) {
+                    $q->select(['id_kabupaten', 'nama']);
                 }])
-                ->orderBy('kecamatan.nama')->get()->toArray();
+                ->orderBy('kabupaten.nama')
+                ->get()->toArray();
         } else {
-            $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'kabupaten.nama AS kabupaten_nama'])
-                ->leftJoin('kabupaten', 'kabupaten.id', '=', 'kecamatan.id_kabupaten')
-                ->with(['desa' => function ($q) {
-                    $q->select(['id_kecamatan', 'nama']);
+            $data = Kabupaten::select(['kabupaten.id', 'kabupaten.nama', 'dapil.nama AS dapil_nama'])
+                ->leftJoin('dapil', 'dapil.id', '=', 'kabupaten.id_dapil')
+                ->with(['kecamatan' => function ($q) {
+                    $q->select(['id_kabupaten', 'nama']);
                 }])
-                ->where(['kecamatan.id_kabupaten' => $id])->orderBy('kecamatan.nama')->get()->toArray();
+                ->where(['kabupaten.id_dapil' => $id])
+                ->orderBy('kabupaten.nama')
+                ->get()->toArray();
         }
-        $kabupaten = Dapil::with('kabupaten')->get();
+        // dd($data);
+        $dapil = Dapil::get()->toArray();
         return view('master.' . $this->link, [
             'data' => $data,
-            'kabupaten' => $kabupaten,
+            'dapil' => $dapil,
 
             'title' => $this->title,
             'link' => $this->link,
@@ -44,8 +49,10 @@ class KecamatanController extends Controller
     public function getById(Request $request)
     {
         $id = $request->id;
-        $data = Kecamatan::select(['kecamatan.id', 'kecamatan.nama', 'kecamatan.created_at', 'kabupaten.nama AS kabupaten_nama', 'kabupaten.id AS kabupaten_id'])
-            ->leftJoin('kabupaten', 'kabupaten.id', '=', 'kecamatan.id_kabupaten')->where('kecamatan.id', $id)->first();
+        $data = DB::table('kabupaten AS k')
+            ->select(['k.id', 'k.nama', 'k.created_at', 'd.nama AS dapil_nama', 'd.id AS dapil_id'])
+            ->leftJoin('dapil AS d', 'd.id', '=', 'k.id_dapil')
+            ->where('k.id', $id)->first();
 
         if ($data) {
             return json_encode([
@@ -76,16 +83,16 @@ class KecamatanController extends Controller
 
             foreach ($exp as $e) {
                 $insertData[] = [
-                    'id_kabupaten' => $data['id_kabupaten'],
+                    'id_dapil' => $data['id_dapil'],
                     'nama' => $e,
                     'created_at' => date('Y-m-d H:i:s')
                 ];
             }
 
-            Kecamatan::insert($insertData);
+            Kabupaten::insert($insertData);
         } else {
             unset($data['_token']);
-            Kecamatan::create($data);
+            Kabupaten::create($data);
         }
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
@@ -97,14 +104,14 @@ class KecamatanController extends Controller
         $data = $request->all();
         unset($data['_token']);
         unset($data['id']);
-        Kecamatan::where('id', $id)->update($data);
+        Kabupaten::where('id', $id)->update($data);
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Diedit...!!');
     }
 
     public function delete($id)
     {
-        Kecamatan::where('id', $id)->delete();
+        Kabupaten::where('id', $id)->delete();
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Dihapus...!!');
     }

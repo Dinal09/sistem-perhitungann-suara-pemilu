@@ -21,29 +21,36 @@
                             <table class="table table-striped m-0">
                                 <thead>
                                     <tr>
+                                        <th class="nomor-tabel">No</th>
                                         <th>Aksi</th>
-                                        <th>No</th>
                                         <th>Nama</th>
-                                        <th>Tanggal</th>
+                                        <th>Kabupaten</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach($data as $idx => $d): ?>
                                     <tr>
+                                        <td> {{ $idx + 1 }} </td>
                                         <td>
                                             <div class="btn-group m-b-20">
                                                 <button class="btn btn-info waves-effect btn-ubah"
-                                                    data-id="{{ $d->id }}" data-toggle="modal"
+                                                    data-id="{{ $d['id'] }}" data-toggle="modal"
                                                     data-target="#modal-edit" title="Ubah Data"><i
                                                         class="ti-pencil-alt"></i></button>
-                                                <a href="/<?= $link ?>/hapus/{{ $d->id }}"
+                                                <a href="/<?= $link ?>/hapus/{{ $d['id'] }}"
                                                     class="btn btn-danger waves-effect ladda-button"
                                                     data-style="slide-right" title="Hapus Data"><i class="ti-trash"></i></a>
                                             </div>
                                         </td>
-                                        <td> {{ $idx + 1 }} </td>
-                                        <td> {{ $d->nama }} </td>
-                                        <td> {{ is_null($d->created_at) ? '-' : date('d-m-Y H:i:s', strtotime($d->created_at)) }}
+                                        <td> {{ $d['nama'] }} </td>
+                                        <td>
+                                            @if (count($d['kabupaten']) == 0)
+                                                -
+                                            @else
+                                                @foreach ($d['kabupaten'] as $k)
+                                                    <span class="badge badge-secondary">{{ $k['nama'] }}</span>
+                                                @endforeach
+                                            @endif
                                         </td>
                                     </tr>
                                     <?php endforeach ?>
@@ -118,7 +125,8 @@
                             <button type="submit" class="ladda-button btn btn-primary" data-style="expand-left">
                                 Submit
                             </button>
-                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-default waves-effect"
+                                data-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>

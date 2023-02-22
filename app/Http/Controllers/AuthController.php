@@ -47,9 +47,6 @@ class AuthController extends Controller
         return redirect('/auth/masuk');
     }
 
-
-
-
     public function daftar()
     {
         return view('auth.register');

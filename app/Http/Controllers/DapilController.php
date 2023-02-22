@@ -13,8 +13,13 @@ class DapilController extends Controller
 
     public function index()
     {
-        $data = Dapil::get();
-        return view('master.'.$this->link, [
+        $data = Dapil::select(['id', 'nama'])->with(['kabupaten' => function ($q) {
+            $q->select(['id_dapil', 'nama']);
+        }])->get()->toArray();
+
+        // dd($data);
+
+        return view('master.' . $this->link, [
             'data' => $data,
             'title' => $this->title,
             'link' => $this->link,
@@ -22,20 +27,21 @@ class DapilController extends Controller
         ]);
     }
 
-    public function getById(Request $request){
+    public function getById(Request $request)
+    {
         $id = $request->id;
         $data = Dapil::find($id);
 
-        if($data){
+        if ($data) {
             return json_encode([
                 'kode' => 200,
-                'pesan' => 'Data '.$this->title.' Berhasil Ditemukan...!!',
+                'pesan' => 'Data ' . $this->title . ' Berhasil Ditemukan...!!',
                 'data' => $data
             ]);
-        }else{
+        } else {
             return json_encode([
                 'kode' => 400,
-                'pesan' => 'Data '.$this->title.' Tidak Ditemukan...!!',
+                'pesan' => 'Data ' . $this->title . ' Tidak Ditemukan...!!',
             ]);
         }
     }
@@ -52,7 +58,7 @@ class DapilController extends Controller
         unset($data['_token']);
         Dapil::create($data);
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Ditambahkan...!!');
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
     }
 
     public function update(Request $request)
@@ -63,13 +69,13 @@ class DapilController extends Controller
         unset($data['id']);
         Dapil::where('id', $id)->update($data);
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Diedit...!!');
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Diedit...!!');
     }
 
     public function delete($id)
     {
         Dapil::where('id', $id)->delete();
 
-        return redirect()->back()->with('sukses', $this->title.' Berhasil Dihapus...!!');
+        return redirect()->back()->with('sukses', $this->title . ' Berhasil Dihapus...!!');
     }
 }

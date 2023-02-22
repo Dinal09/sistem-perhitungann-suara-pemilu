@@ -28,4 +28,8 @@ class Desa extends Model
     {
         return $this->hasMany(Tps::class, 'id_desa', 'id');
     }
+    public function Pemilih()
+    {
+        return $this->hasMany(Pemilih::class, 'id_desa', 'id');
+    }
 }

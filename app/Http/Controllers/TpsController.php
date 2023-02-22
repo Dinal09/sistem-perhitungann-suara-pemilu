@@ -65,8 +65,22 @@ class TpsController extends Controller
             return redirect()->back()->with('error', $validate->errors()->first());
         }
         $data = $request->all();
-        unset($data['_token']);
-        Tps::create($data);
+        if (strpos($data['nama'], ",") !== false) {
+            $exp = explode(', ', $data['nama']);
+
+            foreach ($exp as $e) {
+                $insertData[] = [
+                    'id_desa' => $data['id_desa'],
+                    'nama' => $e,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+            }
+
+            Tps::insert($insertData);
+        } else {
+            unset($data['_token']);
+            Tps::create($data);
+        }
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
     }

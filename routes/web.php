@@ -14,6 +14,7 @@ use App\Http\Controllers\DataSuaraAbuController;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\DesaController;
+use App\Http\Controllers\KabupatenController;
 use App\Http\Controllers\TpsController;
 use App\Http\Controllers\SuaraAbuController;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,14 @@ Route::group(['prefix' => 'dapil', 'middleware' => ['auth', 'admin']], function 
     Route::post('/ubah', [DapilController::class, 'update']);
     Route::get('/hapus/{id}', [DapilController::class, 'delete']);
 });
+// Master Kabupaten
+Route::group(['prefix' => 'kabupaten', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/{id}', [KabupatenController::class, 'index']);
+    Route::post('/get-by-id', [KabupatenController::class, 'getById']);
+    Route::post('/tambah', [KabupatenController::class, 'create']);
+    Route::post('/ubah', [KabupatenController::class, 'update']);
+    Route::get('/hapus/{id}', [KabupatenController::class, 'delete']);
+});
 // Master Kecamatan
 Route::group(['prefix' => 'kecamatan', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/{id}', [KecamatanController::class, 'index']);
@@ -102,7 +111,7 @@ Route::group(['prefix' => 'suara-abu', 'middleware' => ['auth', 'admin']], funct
 
 // Data Umum
 Route::group(['prefix' => 'data-umum', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [DataUmumController::class, 'index']);
+    Route::get('/{id}', [DataUmumController::class, 'index']);
     Route::post('/get-by-id', [DataUmumController::class, 'getById']);
     Route::post('/get-foto-by-id', [DataUmumController::class, 'getFotoById']);
     Route::post('/get-data-by-id', [DataUmumController::class, 'getDataById']);
@@ -118,35 +127,35 @@ Route::group(['prefix' => 'data-kunjungan', 'middleware' => ['auth', 'admin']], 
 });
 // Data Keluarga
 Route::group(['prefix' => 'data-keluarga', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [DataKeluargaController::class, 'index']);
+    Route::get('/{id}', [DataKeluargaController::class, 'index']);
     Route::post('/get-pemilih-by-desa', [DataKeluargaController::class, 'getPemilihByDesa']);
     Route::post('/ubah', [DataKeluargaController::class, 'update']);
     Route::get('/hapus/{id}', [DataKeluargaController::class, 'delete']);
 });
 // Data Simpatisan
 Route::group(['prefix' => 'data-simpatisan', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [DataSimpatisanController::class, 'index']);
+    Route::get('/{id}', [DataSimpatisanController::class, 'index']);
     Route::post('/get-pemilih-by-desa', [DataSimpatisanController::class, 'getPemilihByDesa']);
     Route::post('/ubah', [DataSimpatisanController::class, 'update']);
     Route::get('/hapus/{id}', [DataSimpatisanController::class, 'delete']);
 });
 // Data Pengkhianat
 Route::group(['prefix' => 'data-pengkhianat', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [DataPengkhianatController::class, 'index']);
+    Route::get('/{id}', [DataPengkhianatController::class, 'index']);
     Route::post('/get-pemilih-by-desa', [DataPengkhianatController::class, 'getPemilihByDesa']);
     Route::post('/ubah', [DataPengkhianatController::class, 'update']);
     Route::get('/hapus/{id}', [DataPengkhianatController::class, 'delete']);
 });
 // Daftar Hitam
 Route::group(['prefix' => 'daftar-hitam', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [DaftarHitamController::class, 'index']);
+    Route::get('/{id}', [DaftarHitamController::class, 'index']);
     Route::post('/get-pemilih-by-desa', [DaftarHitamController::class, 'getPemilihByDesa']);
     Route::post('/ubah', [DaftarHitamController::class, 'update']);
     Route::get('/hapus/{id}', [DaftarHitamController::class, 'delete']);
 });
 // Data Suara Abu-abu
 Route::group(['prefix' => 'data-suara-abu', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/', [DataSuaraAbuController::class, 'index']);
+    Route::get('/{id}', [DataSuaraAbuController::class, 'index']);
     Route::post('/get-pemilih-by-desa', [DataSuaraAbuController::class, 'getPemilihByDesa']);
     Route::post('/ubah', [DataSuaraAbuController::class, 'update']);
     Route::get('/hapus/{id}', [DataSuaraAbuController::class, 'delete']);

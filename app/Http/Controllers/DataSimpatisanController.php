@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Desa;
+use App\Models\Kecamatan;
 use App\Models\Pemilih;
 use DateTime;
 use Illuminate\Http\Request;
@@ -13,68 +14,51 @@ class DataSimpatisanController extends Controller
     public $title = 'Data Simpatisan';
     public $link = 'data-simpatisan';
 
-    public function index()
+    public function index($id)
     {
-        $data = Pemilih::getSimpatisan();
-        $desa = Desa::get();
+        $pemilih = array();
+        if ($id == 'all') {
+            $data = Pemilih::getSimpatisan();
+            $dataDesa = null;
+            $pemilih = array();
+        } else {
+            $data = Pemilih::getSimpatisan($id);
+            $dataDesa = Desa::find(['id' => $id])->toArray();
+            $pemilihData = Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
+                ->leftJoin('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')
+                ->where([
+                    'pemilih.id_desa' => $id,
+                ])
+                ->whereNotIn('is_simpatisan', ['iya'])
+                ->get()->toArray();
+
+            foreach ($pemilihData as $idx => $pem) {
+                if ($pem['is_keluarga'] != 'tidak') {
+                    $status = 'Keluarga';
+                } elseif ($pem['is_simpatisan'] == 'iya') {
+                    $status = 'Simpatisan';
+                } elseif ($pem['is_pengkhianat'] == 'iya') {
+                    $status = 'Pengkhianat';
+                } elseif ($pem['is_daftar_hitam'] == 'iya') {
+                    $status = 'Daftar Hitam';
+                } elseif ($pem['id_suara_abu'] != null) {
+                    $status = 'Suara Abu-abu ';
+                } else {
+                    $status = '';
+                }
+                $pemilih[$idx]['id'] = $pem['id'];
+                $pemilih[$idx]['nama'] = $pem['nama'] . ' | ' . $status;
+            }
+        }
+        $selectDesa = Kecamatan::with('desa')->get();
         return view('pemilih.' . $this->link, [
             'data' => $data,
-            'desa' => $desa,
-            'title' => $this->title,
+            'pemilih' => $pemilih,
+            'selectDesa' => $selectDesa,
+            'filter_id' => $id,
+            'title' => $this->title . (isset($dataDesa[0]) ? ' Desa ' . $dataDesa[0]['nama'] : ''),
             'link' => $this->link,
             'explain' => 'Menu yang berisi data pemilih yang dikategorikan sebagai simpatisan, Terdapat Juga Fitur Tambah, Update dan Hapus'
-        ]);
-    }
-
-    public function getPemilihByDesa(Request $request)
-    {
-        $id = $request->idDesa;
-        $data = Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
-            ->leftJoin('tps', 'pemilih.id_tps', '=', 'tps.id')
-            ->leftJoin('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')
-            ->where([
-                'tps.id_desa' => $id,
-            ])
-            ->whereNotIn('is_simpatisan', ['iya'])
-            ->get()->toArray();
-
-        $option = '<option>--- Pilih Pemilih ---</option>';
-        if (count($data) == 0) {
-            return json_encode([
-                'kode' => 400,
-                'pesan' => 'Belum Terdapat Pemilih Pada Desa Tersebut',
-                'option' => $option
-            ]);
-        }
-
-        foreach ($data as $d) {
-            $tgl = date('m.d.y', strtotime($d['tanggal_lahir']));
-            $lahir = DateTime::createFromFormat('m.d.y', $tgl);
-            $sekarang = DateTime::createFromFormat('m.d.y', date('m.d.y'));
-            $umur = $sekarang->diff($lahir);
-
-            if ($d['is_keluarga'] == 'iya') {
-                $status = 'Keluarga';
-            } elseif ($d['is_simpatisan'] == 'iya') {
-                $status = 'Simpatisan';
-            } elseif ($d['is_pengkhianat'] == 'iya') {
-                $status = 'Pengkhianat';
-            } elseif ($d['is_daftar_hitam'] == 'iya') {
-                $status = 'Daftar Hitam';
-            } elseif ($d['id_suara_abu'] != null) {
-                $status = $d['deskripsi'];
-            } else {
-                $status = '-';
-            }
-
-            $option .= '<option value=' . $d['id'] . '> ' . $d['nama'] . ' | ' . $d['no_nik'] . '
-                | ' . $umur->y . ' Tahun ' . $umur->m . ' Bulan | ' . $status . ' </option>';
-        }
-
-        return json_encode([
-            'kode' => 200,
-            'pesan' => 'Pemilih Berhasil Didapatkan',
-            'option' => $option
         ]);
     }
 

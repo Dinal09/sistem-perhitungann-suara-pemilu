@@ -12,6 +12,7 @@ class Pemilih extends Model
     protected $fillable = [
         'id_tps',
         'id_suara_abu',
+        'id_desa',
 
         'nama',
         'no_kk',
@@ -56,38 +57,72 @@ class Pemilih extends Model
     {
         return $this->belongsTo(Tps::class, 'id_tps', 'id');
     }
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class, 'id_desa', 'id');
+    }
     public function suaraAbu()
     {
         return $this->hasOne(SuaraAbu::class, 'id', 'id_suara_abu');
     }
 
-    public static function getKeluarga()
+    public static function getKeluarga($id_desa = null)
     {
-        return Pemilih::where(function ($query) {
+        $query = Pemilih::where(function ($query) {
             $query->where(['is_keluarga' => 'keluarga-mendukung'])
                 ->orWhere(['is_keluarga' => 'keluarga-tidak']);
-        })->get();
+        });
+
+        if ($id_desa != null) {
+            $query->where(['id_desa' => $id_desa]);
+        }
+
+        return $query->get();
     }
 
-    public static function getSimpatisan()
+    public static function getSimpatisan($id_desa = null)
     {
-        return Pemilih::where(['is_simpatisan' => 'iya'])->get();
+        $query =  Pemilih::where(['is_simpatisan' => 'iya']);
+
+        if ($id_desa != null) {
+            $query->where(['id_desa' => $id_desa]);
+        }
+
+        return $query->get();
     }
 
-    public static function getPengkhianat()
+    public static function getPengkhianat($id_desa = null)
     {
-        return Pemilih::where(['is_pengkhianat' => 'iya'])->get();
+        $query =  Pemilih::where(['is_pengkhianat' => 'iya']);
+
+        if ($id_desa != null) {
+            $query->where(['id_desa' => $id_desa]);
+        }
+
+        return $query->get();
     }
 
-    public static function getDaftarHitam()
+    public static function getDaftarHitam($id_desa = null)
     {
-        return Pemilih::where(['is_daftar_hitam' => 'iya'])->get();
+        $query =  Pemilih::where(['is_daftar_hitam' => 'iya']);
+
+        if ($id_desa != null) {
+            $query->where(['id_desa' => $id_desa]);
+        }
+
+        return $query->get();
     }
 
-    public static function getSuaraAbu()
+    public static function getSuaraAbu($id_desa = null)
     {
-        return Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
-            ->join('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id')->get();
+        $query =  Pemilih::select(['pemilih.*', 'suara_abu.deskripsi'])
+            ->join('suara_abu', 'pemilih.id_suara_abu', '=', 'suara_abu.id');
+
+        if ($id_desa != null) {
+            $query->where(['pemilih.id_desa' => $id_desa]);
+        }
+
+        return $query->get();
     }
 
     public static function getTotalDataUmum()

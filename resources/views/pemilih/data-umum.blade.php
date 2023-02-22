@@ -3,35 +3,89 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="card-box">
+            <div class="card-box" style="">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card-box table-responsive">
                             <h4 class="m-t-0 header-title"><b>Tabel {{ $title }} </b></h4>
-                            <p class="text-muted font-13 m-b-30">
+                            <p class="text-muted font-13 m-b-15">
                                 {{ $explain }}</code>.
                             </p>
-                            <a href="#custom-modal-tambah" class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
-                                data-toggle="modal" data-target="#modal-tambah">
-                                <span class="btn-label"><i class="fa fa-plus"></i></span>
-                                Tambah Data
-                            </a>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <a href="#custom-modal-tambah"
+                                        class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
+                                        id="btn-tambah-pemilih">
+                                        <span class="btn-label"><i class="fa fa-plus"></i></span>
+                                        Tambah Data
+                                    </a>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group no-margin">
+                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
+                                            name="id_desa" id="filter-desa" required>
+                                            <option value="all" <?= $filter_id == 'all' ? 'selected' : '' ?>>Semua Desa
+                                            </option>
+                                            <?php foreach($selectDesa as $dap): ?>
+                                            <optgroup label=" {{ $dap->nama }} ">
+                                                <?php foreach ($dap->desa as $des): ?>
+                                                <option value={{ $des->id }}
+                                                    <?= $filter_id == $des->id ? 'selected' : '' ?>>
+                                                    {{ $des->nama }} </option>
+                                                <?php endforeach ?>
+                                            </optgroup>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <table id="datatable" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Aksi</th>
-                                        <th>NIK</th>
+                                        <th>Desa</th>
                                         <th>Nama</th>
-                                        <th>TTL</th>
+                                        <th>Umur</th>
                                         <th>No HP</th>
                                         <th>TPS</th>
-                                        <th>Desa</th>
-                                        <th>Kecamatan</th>
-                                        <th>Dapil</th>
+                                        <th>Jenis</th>
+                                        <th>Kunjungan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach($data as $idx => $d): ?>
+                                    <?php
+                                    $tgl = '';
+                                    if (!is_null($d->tanggal_lahir)) {
+                                        $tgl = date('m.d.Y', strtotime($d->tanggal_lahir));
+                                        $lahir = DateTime::createFromFormat('m.d.Y', $tgl);
+                                        $sekarang = DateTime::createFromFormat('m.d.Y', date('m.d.Y'));
+                                        $umur = $sekarang->diff($lahir);
+                                    }
+                                    $jenis = [];
+                                    $jenis[0] = '-';
+                                    if ($d->is_keluarga != 'tidak') {
+                                        if ($d->is_keluarga == 'keluarga-mendukung') {
+                                            $jenis[0] = 'Keluarga | Mendukung';
+                                            $jenis[1] = 'primary';
+                                        } else {
+                                            $jenis[0] = 'Keluarga | Tidak Mendukung';
+                                            $jenis[1] = 'warning';
+                                        }
+                                    } elseif ($d->is_simpatisan == 'iya') {
+                                        $jenis[0] = 'Simpatisan';
+                                        $jenis[1] = 'success';
+                                    } elseif ($d->is_pengkhianat == 'iya') {
+                                        $jenis[0] = 'Pengkhianat';
+                                        $jenis[1] = 'danger';
+                                    } elseif ($d->is_daftar_hitam == 'iya') {
+                                        $jenis[0] = 'Daftar Hitam';
+                                        $jenis[1] = 'inverse';
+                                    } elseif (!is_null($d->id_suara_abu)) {
+                                        $jenis[0] = 'Suara Abu-abu';
+                                        $jenis[1] = 'default';
+                                    } ?>
+
                                     <tr>
                                         <td>
                                             <div class="btn-group m-b-20">
@@ -44,25 +98,25 @@
                                                     data-target="#modal-lihat" title="Lihat Detail Pemilih"><i
                                                         class="ti-eye"></i></button>
                                                 <button class="btn btn-warning waves-effect btn-pilih-tps"
-                                                    data-id="{{ $d->id }}" data-toggle="modal"
-                                                    data-target="#modal-pilih-tps" title="Pilih TPS"><i
+                                                    data-id="{{ $d->id }}" title="Pilih TPS"><i
                                                         class="ti-map-alt"></i></button>
                                                 <a href="/<?= $link ?>/hapus/{{ $d->id }}"
                                                     class="btn btn-danger waves-effect ladda-button"
                                                     data-style="slide-right" title="Hapus Data"><i class="ti-trash"></i></a>
                                             </div>
                                         </td>
-                                        <td> {{ $d->no_nik }} </td>
+                                        <td> {{ isset($d->desa->nama) ? $d->desa->nama : '-' }} </td>
                                         <td> {{ $d->nama }} </td>
-                                        <td> {{ $d->tempat_lahir . ', ' . date('d M Y', strtotime($d->tanggal_lahir)) }}
+                                        <td> {{ $tgl != '' ? $umur->y . ' Tahun' : '-' }}
                                         </td>
                                         <td> {{ $d->no_hp }} </td>
-                                        <td> {{ isset($d->tps->nama) ? $d->tps->nama : 'Belum Dipilih' }} </td>
-                                        <td> {{ isset($d->tps->desa->nama) ? $d->tps->desa->nama : 'Belum Dipilih' }} </td>
-                                        <td> {{ isset($d->tps->desa->kecamatan->nama) ? $d->tps->desa->kecamatan->nama : 'Belum Dipilih' }}
-                                        </td>
-                                        <td> {{ isset($d->tps->desa->kecamatan->dapil->nama) ? $d->tps->desa->kecamatan->dapil->nama : 'Belum Dipilih' }}
-                                        </td>
+                                        <td> {{ isset($d->tps->nama) ? $d->tps->nama : '-' }} </td>
+                                        <td><span
+                                                class="label label-{{ isset($jenis[1]) ? $jenis[1] : 'white' }}">{{ $jenis[0] }}
+                                            </span></td>
+                                        <td><span
+                                                class="label label-{{ $d->is_kunjungan == 'sudah' ? 'primary' : 'danger' }}">
+                                                {{ $d->is_kunjungan == 'sudah' ? 'Sudah' : 'Belum' }} </span></td>
                                     </tr>
                                     <?php endforeach ?>
                                 </tbody>
@@ -107,39 +161,56 @@
                                                         <label for="field-7" class="control-label">Nomor NIK (Nomor Induk
                                                             Kependudukan)</label>
                                                         <input type="text" class="form-control" name="no_nik"
-                                                            placeholder="Masukkan Nomor NIK" minlength="16" required>
+                                                            placeholder="Masukkan Nomor NIK" minlength="16">
+                                                        <input type="hidden" name="id_desa" id="id_desa_tambah"
+                                                            value="<?= $filter_id ?>">
                                                     </div>
                                                     <div class="form-group no-margin">
                                                         <label for="field-7" class="control-label">Nomor KK (Kartu
                                                             keluarga)</label>
                                                         <input type="text" class="form-control" name="no_kk"
-                                                            placeholder="Masukkan Nomor KK" minlength="16" required>
+                                                            placeholder="Masukkan Nomor KK" minlength="16">
                                                     </div>
                                                     <div class="form-group no-margin">
-                                                        <label for="field-7" class="control-label">Nama</label>
+                                                        <label for="field-7" class="control-label">Nama <sup
+                                                                style="color: red">* Wajib
+                                                                Diisi</sup></label>
                                                         <input type="text" class="form-control" name="nama"
                                                             placeholder="Masukkan Nama" required>
                                                     </div>
                                                     <div class="form-group no-margin">
                                                         <label for="field-7" class="control-label">Tempat Lahir</label>
                                                         <input type="text" class="form-control" name="tempat_lahir"
-                                                            placeholder="Masukkan Tempat Lahir" required>
+                                                            placeholder="Masukkan Tempat Lahir">
                                                     </div>
                                                     <div class="form-group no-margin">
                                                         <label for="field-7" class="control-label">Tanggal Lahir</label>
                                                         <input type="date" class="form-control" name="tanggal_lahir"
-                                                            placeholder="Masukkan Tanggal Lahir" required>
+                                                            placeholder="Masukkan Tanggal Lahir">
                                                     </div>
                                                     <div class="form-group no-margin">
-                                                        <label for="field-7" class="control-label">Nomor Telepon</label>
+                                                        <label for="field-7" class="control-label">Nomor Telepon <sup
+                                                                style="color: red">* Wajib
+                                                                Diisi</sup></label>
                                                         <input type="text" class="form-control" name="no_hp"
                                                             placeholder="Masukkan nomor telepon {{ $title }}"
                                                             minlength="11" required>
                                                     </div>
                                                     <div class="form-group no-margin">
-                                                        <label for="field-7" class="control-label">Alamat</label>
+                                                        <label for="field-7" class="control-label">Alamat <sup
+                                                                style="color: red">* Wajib
+                                                                Diisi</sup></label>
                                                         <textarea class="form-control autogrow" name="alamat" placeholder="Masukkan alamat {{ $title }}"
                                                             style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" required></textarea>
+                                                    </div>
+                                                    <div class="form-group no-margin">
+                                                        <div class="checkbox checkbox-primary">
+                                                            <input id="checkbox2" type="checkbox" value="iya"
+                                                                name="is_kunjungan[]">
+                                                            <label for="checkbox2">
+                                                                Sudah Dikunjungi
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                     <hr>
                                                 </div>
@@ -167,21 +238,21 @@
                                                         <div class="form-group no-margin">
                                                             <label for="field-7" class="control-label">Foto</label>
                                                             <input type="file" accept=".jpg,.png" class="filestyle"
-                                                                name="foto" data-buttonname="btn-white" required>
+                                                                name="foto" data-buttonname="btn-white">
                                                             <sup>* File Dengan Extensi .jpg, .png, dengan ukuran maksimal
                                                                 2Mb</sup>
                                                         </div>
                                                         <div class="form-group no-margin">
                                                             <label for="field-7" class="control-label">Foto KTP</label>
                                                             <input type="file" accept=".jpg,.png" class="filestyle"
-                                                                name="foto_ktp" data-buttonname="btn-white" required>
+                                                                name="foto_ktp" data-buttonname="btn-white">
                                                             <sup>* File Dengan Extensi .jpg, .png, dengan ukuran maksimal
                                                                 2Mb</sup>
                                                         </div>
                                                         <div class="form-group no-margin">
                                                             <label for="field-7" class="control-label">Foto KK</label>
                                                             <input type="file" accept=".jpg,.png" class="filestyle"
-                                                                name="foto_kk" data-buttonname="btn-white" required>
+                                                                name="foto_kk" data-buttonname="btn-white">
                                                             <sup>* File Dengan Extensi .jpg, .png, dengan ukuran maksimal
                                                                 2Mb</sup>
                                                         </div>
@@ -244,44 +315,57 @@
                                                             Kependudukan)</label>
                                                         <input type="text" class="form-control" name="no_nik"
                                                             id="ubah-no_nik" placeholder="Masukkan Nomor NIK"
-                                                            minlength="16" required>
+                                                            minlength="16">
                                                     </div>
                                                     <div class="form-group no-margin">
                                                         <label for="field-7" class="control-label">Nomor KK (Kartu
                                                             keluarga)</label>
                                                         <input type="text" class="form-control" name="no_kk"
                                                             id="ubah-no_kk" placeholder="Masukkan Nomor KK"
-                                                            minlength="16" required>
+                                                            minlength="16">
                                                     </div>
                                                     <div class="form-group no-margin">
-                                                        <label for="field-7" class="control-label">Nama</label>
+                                                        <label for="field-7" class="control-label">Nama <sup
+                                                                style="color: red">* Wajib
+                                                                Diisi</sup></label>
                                                         <input type="text" class="form-control" name="nama"
                                                             id="ubah-nama" placeholder="Masukkan Nama" required>
                                                     </div>
                                                     <div class="form-group no-margin">
                                                         <label for="field-7" class="control-label">Tempat Lahir</label>
                                                         <input type="text" class="form-control" name="tempat_lahir"
-                                                            id="ubah-tempat_lahir" placeholder="Masukkan Tempat Lahir"
-                                                            required>
+                                                            id="ubah-tempat_lahir" placeholder="Masukkan Tempat Lahir">
                                                     </div>
                                                     <div class="form-group no-margin">
                                                         <label for="field-7" class="control-label">Tanggal Lahir</label>
                                                         <input type="date" class="form-control" name="tanggal_lahir"
-                                                            id="ubah-tanggal_lahir" placeholder="Masukkan Tanggal Lahir"
-                                                            required>
+                                                            id="ubah-tanggal_lahir" placeholder="Masukkan Tanggal Lahir">
                                                     </div>
                                                     <div class="form-group no-margin">
-                                                        <label for="field-7" class="control-label">Nomor Telepon</label>
+                                                        <label for="field-7" class="control-label">Nomor Telepon <sup
+                                                                style="color: red">* Wajib
+                                                                Diisi</sup></label>
                                                         <input type="text" class="form-control" name="no_hp"
                                                             id="ubah-no_hp"
                                                             placeholder="Masukkan nomor telepon {{ $title }}"
                                                             minlength="11" required>
                                                     </div>
                                                     <div class="form-group no-margin">
-                                                        <label for="field-7" class="control-label">Alamat</label>
+                                                        <label for="field-7" class="control-label">Alamat <sup
+                                                                style="color: red">* Wajib
+                                                                Diisi</sup></label>
                                                         <textarea class="form-control autogrow" id="ubah-alamat" name="alamat"
                                                             placeholder="Masukkan alamat {{ $title }}"
                                                             style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" required></textarea>
+                                                    </div>
+                                                    <div class="form-group no-margin">
+                                                        <div class="checkbox checkbox-primary">
+                                                            <input type="checkbox" value="iya" name="is_kunjungan[]"
+                                                                id="ubah-is_kunjungan">
+                                                            <label for="checkbox2">
+                                                                Sudah Dikunjungi
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                     <hr>
                                                 </div>
@@ -308,21 +392,21 @@
                                                         <div class="form-group no-margin">
                                                             <label for="field-7" class="control-label">Foto</label>
                                                             <input type="file" accept=".jpg,.png" class="filestyle"
-                                                                name="foto" data-buttonname="btn-white" required>
+                                                                name="foto" data-buttonname="btn-white">
                                                             <sup>* File Dengan Extensi .jpg, .png, dengan ukuran maksimal
                                                                 2Mb</sup>
                                                         </div>
                                                         <div class="form-group no-margin">
                                                             <label for="field-7" class="control-label">Foto KTP</label>
                                                             <input type="file" accept=".jpg,.png" class="filestyle"
-                                                                name="foto_ktp" data-buttonname="btn-white" required>
+                                                                name="foto_ktp" data-buttonname="btn-white">
                                                             <sup>* File Dengan Extensi .jpg, .png, dengan ukuran maksimal
                                                                 2Mb</sup>
                                                         </div>
                                                         <div class="form-group no-margin">
                                                             <label for="field-7" class="control-label">Foto KK</label>
                                                             <input type="file" accept=".jpg,.png" class="filestyle"
-                                                                name="foto_kk" data-buttonname="btn-white" required>
+                                                                name="foto_kk" data-buttonname="btn-white">
                                                             <sup>* File Dengan Extensi .jpg, .png, dengan ukuran maksimal
                                                                 2Mb</sup>
                                                         </div>
@@ -412,7 +496,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">Pilih TPS</h4>
+                    <h4 class="modal-title" id="myModalLabel">Pilih TPS {{ $title }}</h4>
                 </div>
                 <div class="modal-body">
                     <form action="/<?= $link ?>/ubah" method="POST" enctype="multipart/form-data">
@@ -424,13 +508,9 @@
                                     <input type="hidden" id="pilih-tps-id" name="id">
                                     <select class="selectpicker" data-live-search="true" data-style="btn-white"
                                         id="id_tps" name="id_tps" required>
-                                        <option>--- Pilih TPS ---</option>
-                                        <?php foreach($desa as $d): ?>
-                                        <optgroup label=" {{ $d->nama }} ">
-                                            <?php foreach ($d->tps as $t): ?>
-                                            <option value={{ $t->id }}> {{ $t->nama }} </option>
-                                            <?php endforeach ?>
-                                        </optgroup>
+                                        <option selected>--- Pilih TPS ---</option>
+                                        <?php foreach ($tps as $t): ?>
+                                        <option value={{ $t->id }}> {{ $t->nama }} </option>
                                         <?php endforeach ?>
                                     </select>
                                 </div>
@@ -618,6 +698,10 @@
                     $('#ubah-alamat').val(result.data.alamat)
                     $('#ubah-no_hp').val(result.data.no_hp)
                     $('#ubah-id').val(result.data.id)
+
+                    if (result.data.is_kunjungan == 'sudah') {
+                        $('#ubah-is_kunjungan').attr('checked', true)
+                    }
                 } else {
                     $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
                         result.pesan
@@ -665,30 +749,6 @@
             })
         })
 
-        $('.btn-pilih-tps').click(function() {
-            let id = $(this).data('id')
-
-            $.post('/data-umum/get-by-id?id=' + id, {
-                '_token': '{{ csrf_token() }}',
-                idJenis: id
-            }).done(function(output) {
-                let result = $.parseJSON(output);
-                if (result.kode == 200) {
-                    $.Notification.autoHideNotify('success', 'top right', 'Berhasil...!!',
-                        result.pesan
-                    )
-
-                    if (result.data.tps != null) {
-                        $('#get-data-by-id').val(result.data.tps.id)
-                    }
-                    $('#pilih-tps-id').val(result.data.id)
-                } else {
-                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
-                        result.pesan
-                    )
-                }
-            })
-        })
 
         function lihatKtp() {
             let idLihat = $('#lihat-data-id').val()
@@ -733,5 +793,63 @@
                 }
             })
         }
+
+        $('#filter-desa').change(function() {
+            let id = $(this).val()
+
+            window.location.href = '/data-umum/' + id
+        })
+
+        $('#btn-tambah-pemilih').click(function(event) {
+            event.preventDefault();
+
+            let id_desa = $('#id_desa_tambah').val()
+            if (id_desa == 'all') {
+                $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
+                    "Pilih Desa Terlebih Dahulu Sebelum Menambah Pemilih"
+                )
+            } else {
+                $('#modal-tambah').modal('show')
+            }
+        })
+
+
+        $('.btn-pilih-tps').click(function(event) {
+            event.preventDefault();
+
+            let id = $(this).data('id')
+
+            let id_desa = $('#id_desa_tambah').val()
+            if (id_desa == 'all') {
+                $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
+                    "Pilih Desa Terlebih Dahulu Sebelum Menambah Pemilih"
+                )
+            } else {
+                $('#modal-pilih-tps').modal('show')
+
+                $.post('/data-umum/get-by-id?id=' + id, {
+                    '_token': '{{ csrf_token() }}',
+                    idJenis: id
+                }).done(function(output) {
+                    let result = $.parseJSON(output);
+                    if (result.kode == 200) {
+                        $.Notification.autoHideNotify('success', 'top right', 'Berhasil...!!',
+                            result.pesan
+                        )
+
+                        if (result.data.tps != null) {
+                            $('#id_tps').val(result.data.tps.id).trigger('change')
+                        } else {
+                            $('#id_tps').val('').trigger('change')
+                        }
+                        $('#pilih-tps-id').val(result.data.id)
+                    } else {
+                        $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
+                            result.pesan
+                        )
+                    }
+                })
+            }
+        })
     </script>
 @endsection

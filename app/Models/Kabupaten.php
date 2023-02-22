@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kecamatan extends Model
+class Kabupaten extends Model
 {
     use HasFactory;
-    protected $table = 'kecamatan';
+    protected $table = 'kabupaten';
     protected $fillable = [
-        'id_kabupaten',
+        'id_dapil',
         'nama',
         'created_at',
         'updated_at'
@@ -18,12 +18,12 @@ class Kecamatan extends Model
     public $timestamp = TRUE;
 
 
-    public function kabupaten()
+    public function dapil()
     {
-        return $this->belongsTo(Kabupaten::class, 'id_kabupaten', 'id');
+        return $this->belongsTo(Dapil::class, 'id_dapil', 'id');
     }
-    public function desa()
+    public function kecamatan()
     {
-        return $this->hasMany(Desa::class, 'id_kecamatan', 'id');
+        return $this->hasMany(Kecamatan::class, 'id_kabupaten', 'id');
     }
 }
