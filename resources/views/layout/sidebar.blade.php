@@ -38,6 +38,14 @@
                         <li><a href="/jenis-tim-sukses">Tim Sukses</a></li>
                     </ul>
                 </li>
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="ti-flag-alt-2"></i> <span>
+                            Master Partai </span> <span class="menu-arrow"></span> </a>
+                    <ul class="list-unstyled">
+                        <li><a href="/partai">Partai</a></li>
+                        <li><a href="/calon/all">Calon</a></li>
+                    </ul>
+                </li>
 
                 <li class="text-muted menu-title">Pemilih</li>
                 <li class="has_sub">
@@ -56,11 +64,29 @@
                     <a href="javascript:void(0);" class="waves-effect"><i class="ti-medall"></i> <span>
                             Pembagian Pemilih </span> <span class="menu-arrow"></span> </a>
                     <ul class="list-unstyled">
-                        <li><a href="/data-keluarga/all">Data Keluarga</a></li>
+                        <li><a href="/data-keluarga/all/all">Data Keluarga</a></li>
                         <li><a href="/data-simpatisan/all">Data Simpatisan</a></li>
-                        <li><a href="/data-suara-abu/all">Data Suara Abu-abu</a></li>
-                        <li><a href="/data-tim-sukses/all">Data Tim Sukses</a></li>
-                        <li><a href="/daftar-saksi/all">Data Saksi</a></li>
+                        <li><a href="/data-suara-abu/all/all">Data Suara Abu-abu</a></li>
+                    </ul>
+                </li>
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="ti-cup"></i> <span>
+                            Data Tim Sukses </span> <span class="menu-arrow"></span> </a>
+                    <ul class="list-unstyled">
+                        <li><a href="/data-tim-sukses/kabupaten/all/all">Tingkat Kabupaten</a></li>
+                        <li><a href="/data-tim-sukses/kecamatan/all/all">Tingkat Kecamatan</a></li>
+                        <li><a href="/data-tim-sukses/desa/all/all">Tingkat Desa</a></li>
+                        <li><a href="/data-tim-sukses/tps/all/all">Tingkat TPS</a></li>
+                    </ul>
+                </li>
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="ti-eye"></i> <span>
+                            Data Saksi </span> <span class="menu-arrow"></span> </a>
+                    <ul class="list-unstyled">
+                        <li><a href="/data-saksi/kabupaten/all/all">Tingkat Kabupaten</a></li>
+                        <li><a href="/data-saksi/kecamatan/all/all">Tingkat Kecamatan</a></li>
+                        <li><a href="/data-saksi/desa/all/all">Tingkat Desa</a></li>
+                        <li><a href="/data-saksi/tps/all/all">Tingkat TPS</a></li>
                     </ul>
                 </li>
 

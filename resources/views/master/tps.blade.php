@@ -87,24 +87,18 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
+                                    <p>"Pilih Salah Satu Cara Input TPS Dibawah, Cukup isi salah satu cara yang tersedia
+                                        dibawah."</p>
+                                    <input type="hidden" name="id_desa" value="{{ $filter_id }}">
                                     <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Desa</label>
-                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
-                                            name="id_desa" required>
-                                            <option>--- Pilih Desa ---</option>
-                                            <?php foreach($desa as $dap): ?>
-                                            <optgroup label=" {{ $dap->nama }} ">
-                                                <?php foreach ($dap->desa as $des): ?>
-                                                <option value={{ $des->id }}> {{ $des->nama }} </option>
-                                                <?php endforeach ?>
-                                            </optgroup>
-                                            <?php endforeach ?>
-                                        </select>
+                                        <label for="field-7" class="control-label">A. Input Satu TPS</label>
+                                        <textarea class="form-control autogrow" name="nama" placeholder="Masukkan Nama {{ $title }}"
+                                            style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;"></textarea>
                                     </div>
                                     <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Nama {{ $title }} </label>
-                                        <textarea class="form-control autogrow" name="nama" placeholder="Masukkan Nama {{ $title }}"
-                                            style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" required></textarea>
+                                        <label for="field-7" class="control-label">B. Input Banyak TPS sekaligus</label>
+                                        <input type="number" name="jumlah" class="form-control"
+                                            placeholder="Masukkan Jumlah TPS yang ingin diinput">
                                     </div>
                                 </div>
                             </div>

@@ -2,32 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tps;
-use App\Models\Dapil;
-use App\Models\Kecamatan;
+use App\Models\Calon;
+use App\Models\Partai;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class TpsController extends Controller
+class CalonController extends Controller
 {
-    public $title = 'Tps';
-    public $link = 'tps';
+    public $title = 'Calon';
+    public $link = 'calon';
 
     public function index($id)
     {
         if ($id == 'all') {
-            $data = Tps::select(['tps.*', 'desa.nama AS desa_nama'])
-                ->leftJoin('desa', 'desa.id', '=', 'tps.id_desa')->orderBy('nama')->get();
+            $data = Calon::select(['calon.id', 'calon.nama', 'partai.deskripsi AS partai_nama'])
+                ->leftJoin('partai', 'partai.id', '=', 'calon.id_partai')
+                ->orderBy('calon.nama')
+                ->get()->toArray();
         } else {
-            $data = Tps::select(['tps.*', 'desa.nama AS desa_nama'])
-                ->leftJoin('desa', 'desa.id', '=', 'tps.id_desa')->where(['id_desa' => $id])->orderBy('nama')->get();
+            $data = Calon::select(['calon.id', 'calon.nama', 'partai.deskripsi AS partai_nama'])
+                ->leftJoin('partai', 'partai.id', '=', 'calon.id_partai')
+                ->where(['calon.id_partai' => $id])
+                ->orderBy('calon.nama')
+                ->get()->toArray();
         }
-
-        $desa = Kecamatan::with('desa')->get();
-
+        // dd($data);
+        $partai = Partai::get()->toArray();
         return view('master.' . $this->link, [
             'data' => $data,
-            'desa' => $desa,
+            'partai' => $partai,
+
             'title' => $this->title,
             'link' => $this->link,
             'filter_id' => $id,
@@ -38,8 +43,10 @@ class TpsController extends Controller
     public function getById(Request $request)
     {
         $id = $request->id;
-        $data = Tps::select(['tps.*', 'desa.nama AS desa_nama', 'desa.id AS desa_id'])
-            ->leftJoin('desa', 'desa.id', '=', 'tps.id_desa')->where('tps.id', $id)->first();
+        $data = DB::table('calon AS k')
+            ->select(['k.id', 'k.nama', 'k.created_at', 'd.deskripsi AS partai_nama', 'd.id AS partai_id'])
+            ->leftJoin('partai AS d', 'd.id', '=', 'k.id_partai')
+            ->where('k.id', $id)->first();
 
         if ($data) {
             return json_encode([
@@ -58,39 +65,29 @@ class TpsController extends Controller
     public function create(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'id_desa' => 'required'
+            'nama' => 'required',
         ]);
         if ($validate->fails()) {
             return redirect()->back()->with('error', $validate->errors()->first());
         }
         $data = $request->all();
-        if ($data['nama'] != '') {
-            if (strpos($data['nama'], ",") !== false) {
-                $exp = explode(', ', $data['nama']);
+        // dd($data);
 
-                foreach ($exp as $e) {
-                    $insertData[] = [
-                        'id_desa' => $data['id_desa'],
-                        'nama' => $e,
-                        'created_at' => date('Y-m-d H:i:s')
-                    ];
-                }
+        if (strpos($data['nama'], "|") !== false) {
+            $exp = explode(' | ', $data['nama']);
 
-                Tps::insert($insertData);
-            } else {
-                unset($data['_token']);
-                Tps::create($data);
-            }
-        } else {
-            $dataInsert = array();
-            for ($a = 1; $a <= (int)$data['jumlah']; $a++) {
-                $dataInsert[] = [
-                    'id_desa' => $data['id_desa'],
-                    'nama' => 'TPS ' . $a,
+            foreach ($exp as $e) {
+                $insertData[] = [
+                    'id_partai' => (int)$data['id_partai'],
+                    'nama' => $e,
                     'created_at' => date('Y-m-d H:i:s')
                 ];
             }
-            Tps::insert($dataInsert);
+
+            Calon::insert($insertData);
+        } else {
+            unset($data['_token']);
+            Calon::create($data);
         }
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan...!!');
@@ -102,14 +99,14 @@ class TpsController extends Controller
         $data = $request->all();
         unset($data['_token']);
         unset($data['id']);
-        Tps::where('id', $id)->update($data);
+        Calon::where('id', $id)->update($data);
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Diedit...!!');
     }
 
     public function delete($id)
     {
-        Tps::where('id', $id)->delete();
+        Calon::where('id', $id)->delete();
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Dihapus...!!');
     }

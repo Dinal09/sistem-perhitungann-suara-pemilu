@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Desa;
+use App\Models\JenisKeluarga;
 use App\Models\Kecamatan;
 use App\Models\Pemilih;
+use App\Models\TypePemilih;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,36 +16,34 @@ class DataKeluargaController extends Controller
     public $title = 'Data Keluarga';
     public $link = 'data-keluarga';
 
-    public function index($id)
+    public function index($id, $jenis)
     {
         $pemilih = array();
         if ($id == 'all') {
-            $data = Pemilih::select(['pemilih.id', 'pemilih.nama', 'pemilih.no_nik', 'pemilih.alamat', 'pemilih.no_hp', 'jenis_keluarga.deskripsi'])
-                ->join('type_pemilih', 'type_pemilih.id_pemilih', '=', 'pemilih.id')
-                ->join('jenis_keluarga', 'jenis_keluarga.id', '=', 'type_pemilih.id_keluarga')
-                ->whereNotNull('type_pemilih.id_keluarga')
-                ->get()->toArray();
+            $data = Pemilih::getAllKeluarga($jenis);
             $dataDesa = null;
-            $pemilih = array();
         } else {
-            $data = Pemilih::select(['pemilih.id', 'pemilih.nama', 'pemilih.no_nik', 'pemilih.alamat', 'pemilih.no_hp', 'jenis_keluarga.deskripsi'])
-                ->join('type_pemilih', 'type_pemilih.id_pemilih', '=', 'pemilih.id')
-                ->join('jenis_keluarga', 'jenis_keluarga.id', '=', 'type_pemilih.id_keluarga')
-                ->whereNotNull('type_pemilih.id_keluarga')
-                ->where(['pemilih.id_desa' => $id])
-                ->get()->toArray();
+            $data = Pemilih::getKeluargaByDesa($id, $jenis);
             $dataDesa = Desa::find(['id' => $id])->toArray();
-            $pemilih = array();
+            $pemilih = Pemilih::getPemilihExpeptKeluargaByDesa($id);
         }
+        // dd($pemilih);
         $selectDesa = Kecamatan::with('desa')->get();
+        $jenisKeluarga = JenisKeluarga::get()->toArray();
+        $params = [
+            'id' => $id,
+            'jenis' => $jenis
+        ];
+
         return view('pemilih.' . $this->link, [
-            'data' => $data,
-            'pemilih' => $pemilih,
             'title' => $this->title . (isset($dataDesa[0]) ? ' Desa ' . $dataDesa[0]['nama'] : ''),
+            'explain' => 'Menu yang berisi data pemilih yang dikategorikan sebagai keluarga, Terdapat Juga Fitur Tambah, Update dan Hapus',
             'link' => $this->link,
             'selectDesa' => $selectDesa,
-            'filter_id' => $id,
-            'explain' => 'Menu yang berisi data pemilih yang dikategorikan sebagai keluarga, Terdapat Juga Fitur Tambah, Update dan Hapus'
+            'params' => $params,
+            'data' => $data,
+            'pemilih' => $pemilih,
+            'jenisKeluarga' => $jenisKeluarga
         ]);
     }
 
@@ -51,29 +51,19 @@ class DataKeluargaController extends Controller
     {
         $id = $request->id_pemilih;
         $jenis = $request->id_jenis;
-        $data = [
-            'is_keluarga' => $jenis,
-            'is_simpatisan' => 'tidak',
-            'is_pengkhianat' => 'tidak',
-            'is_daftar_hitam' => 'tidak',
-            'id_suara_abu' => null,
-            'keluarga_tgl' => date('Y-m-d H:i:s'),
-            'keluarga_by' => Auth::user()->id
-        ];
-        Pemilih::where('id', $id)->update($data);
+
+        TypePemilih::insert([
+            'id_pemilih' => $id,
+            'id_pemilih_jenis' => 3,
+            'id_keluarga' => $jenis
+        ]);
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Ditambahkan!!');
     }
 
     public function delete($id)
     {
-        $id = $id;
-        $data = [
-            'is_keluarga' => 'tidak',
-            'keluarga_tgl' => date('Y-m-d H:i:s'),
-            'keluarga_by' => Auth::user()->id
-        ];
-        Pemilih::where('id', $id)->update($data);
+        TypePemilih::where('id', $id)->delete();
 
         return redirect()->back()->with('sukses', $this->title . ' Berhasil Dihapus!!');
     }

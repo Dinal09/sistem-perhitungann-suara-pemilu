@@ -10,23 +10,37 @@
                         {{ $explain }}</code>.
                     </p>
                     <div class="row">
-                        <div class="col-lg-8">
-                            <a href="#custom-modal-tambah"
-                                class="btn btn-primary btn-rounded waves-effect waves-light m-b-20" id="btn-tambah-pemilih">
+                        <div class="col-lg-6">
+                            <a href="#custom-modal-tambah" class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
+                                id="btn-tambah-pemilih">
                                 <span class="btn-label"><i class="fa fa-plus"></i></span>
                                 Tambah Data
                             </a>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group no-margin">
+                                <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_jenis"
+                                    id="filter-jenis">
+                                    <option value="all" <?= $params['jenis'] == 'all' ? 'selected' : '' ?>>Semua Jenis
+                                        @foreach ($suaraAbu as $jk)
+                                    <option value={{ $jk['id'] }}
+                                        <?= $params['jenis'] == $jk['id'] ? 'selected' : '' ?>>
+                                        {{ $jk['deskripsi'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group no-margin">
                                 <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_desa"
                                     id="filter-desa" required>
-                                    <option value="all" <?= $filter_id == 'all' ? 'selected' : '' ?>>Semua Desa
+                                    <option value="all" <?= $params['id'] == 'all' ? 'selected' : '' ?>>Semua Desa
                                     </option>
                                     <?php foreach($selectDesa as $dap): ?>
                                     <optgroup label=" {{ $dap->nama }} ">
                                         <?php foreach ($dap->desa as $des): ?>
-                                        <option value={{ $des->id }} <?= $filter_id == $des->id ? 'selected' : '' ?>>
+                                        <option value={{ $des->id }}
+                                            <?= $params['id'] == $des->id ? 'selected' : '' ?>>
                                             {{ $des->nama }} </option>
                                         <?php endforeach ?>
                                     </optgroup>
@@ -51,16 +65,16 @@
                             <tr>
                                 <td>
                                     <div class="btn-group m-b-20">
-                                        <a href="/<?= $link ?>/hapus/{{ $d->id }}"
+                                        <a href="/<?= $link ?>/hapus/{{ $d['type_id'] }}"
                                             class="btn btn-danger waves-effect ladda-button" data-style="slide-right"
                                             title="Hapus Data"><i class="ti-trash"></i></a>
                                     </div>
                                 </td>
-                                <td> {{ $d->nama }} </td>
-                                <td> {{ $d->no_nik }} </td>
-                                <td> {{ $d->alamat }} </td>
-                                <td> {{ $d->no_hp }} </td>
-                                <td> {{ $d->suaraAbu->deskripsi }} </td>
+                                <td> {{ $d['nama'] }} </td>
+                                <td> {{ $d['no_nik'] }} </td>
+                                <td> {{ $d['alamat'] }} </td>
+                                <td> {{ $d['no_hp'] }} </td>
+                                <td> {{ $d['deskripsi'] }} </td>
                             </tr>
                             <?php endforeach ?>
                         </tbody>
@@ -90,19 +104,32 @@
                                         <select class="selectpicker" data-live-search="true" data-style="btn-white"
                                             name="id_pemilih" id="id_pemilih" required>
                                             <option>--- Pilih Pemilih ---</option>
-                                            <?php foreach($pemilih as $pem): ?>
-                                            <option value={{ $pem['id'] }}> {{ $pem['nama'] }} </option>
-                                            <?php endforeach ?>
+                                            @foreach ($pemilih as $pem)
+                                                <?php
+                                                $nama = $pem['pemilih_nama'];
+                                                $keluarga = false;
+                                                if (count($pem['type_pemilih']) != 0) {
+                                                    $nama .= ' ( ';
+                                                    foreach ($pem['type_pemilih'] as $tp) {
+                                                        $nama .= $tp['jenis_pemilih']['deskripsi'] . ', ';
+                                                    }
+                                                    $nama .= ' )';
+                                                } ?>
+
+                                                <option value={{ $pem['id'] }}>
+                                                    {{ $nama }} </option>
+                                            @endforeach
                                         </select>
-                                        <input type="hidden" name="id_desa" id="id_desa_tambah" value="<?= $filter_id ?>">
+                                        <input type="hidden" name="id_desa" id="id_desa_tambah"
+                                            value="<?= $params['id'] ?>">
                                     </div>
                                     <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Jenis Keluarga</label>
+                                        <label for="field-7" class="control-label">Jenis Suara Abu</label>
                                         <select class="selectpicker" data-live-search="true" data-style="btn-white"
                                             name="id_jenis" id="id_jenis" required>
                                             <option>--- Pilih Jenis ---</option>
-                                            <?php foreach($jenis as $j): ?>
-                                            <option value={{ $j->id }}> {{ $j->deskripsi }} </option>
+                                            <?php foreach($suaraAbu as $j): ?>
+                                            <option value={{ $j['id'] }}> {{ $j['deskripsi'] }} </option>
                                             <?php endforeach ?>
                                         </select>
                                     </div>
@@ -153,23 +180,13 @@
 @section('add-footer')
     <script src="{{ url('/ubold/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/switchery/js/switchery.min.js') }}"></script>
-    <script src="{{ url('/ubold/assets/plugins/multiselect/js/jquery.multi-select.js') }}" type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/plugins/jquery-quicksearch/jquery.quicksearch.js') }}" type="text/javascript">
-    </script>
-    <script src="{{ url('/ubold/assets/plugins/select2/js/select2.min.js') }}" type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/plugins/bootstrap-select/js/bootstrap-select.min.js') }}" type="text/javascript">
-    </script>
-    <script src="{{ url('/ubold/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js') }}"
-        type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js') }}"
-        type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}" type="text/javascript">
-    </script>
-    {{-- <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.mockjax.js') }}" type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/jquery.autocomplete.min.js') }}" type="text/javascript">
-    </script>
-    <script src="{{ url('/ubold/assets/plugins/autocomplete/countries.js') }}" type="text/javascript"></script>
-    <script src="{{ url('/ubold/assets/pages/autocomplete.js') }}" type="text/javascript"></script> --}}
+    <script src="{{ url('/ubold/assets/plugins/multiselect/js/jquery.multi-select.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/jquery-quicksearch/jquery.quicksearch.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
 
     <script src="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.bootstrap.js') }}"></script>
@@ -223,8 +240,15 @@
 
         $('#filter-desa').change(function() {
             let id = $(this).val()
+            let jenis = $('#filter-jenis').val()
 
-            window.location.href = '/data-suara-abu/' + id
+            window.location.href = '/data-suara-abu/' + id + '/' + jenis
+        })
+        $('#filter-jenis').change(function() {
+            let id = $('#filter-desa').val()
+            let jenis = $(this).val()
+
+            window.location.href = '/data-suara-abu/' + id + '/' + jenis
         })
 
         $('#btn-tambah-pemilih').click(function(event) {

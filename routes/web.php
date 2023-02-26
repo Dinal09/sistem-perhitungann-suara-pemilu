@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CalonController;
 use App\Http\Controllers\DaftarHitamController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\JenisSuaraController;
@@ -9,12 +10,15 @@ use App\Http\Controllers\DapilController;
 use App\Http\Controllers\DataKeluargaController;
 use App\Http\Controllers\DataKunjunganController;
 use App\Http\Controllers\DataPengkhianatController;
+use App\Http\Controllers\DataSaksiController;
 use App\Http\Controllers\DataSimpatisanController;
 use App\Http\Controllers\DataSuaraAbuController;
+use App\Http\Controllers\DataTimSuksesController;
 use App\Http\Controllers\DataUmumController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\KabupatenController;
+use App\Http\Controllers\PartaiController;
 use App\Http\Controllers\PemilihJenisController;
 use App\Http\Controllers\TpsController;
 use App\Http\Controllers\SuaraAbuController;
@@ -126,6 +130,24 @@ Route::group(['prefix' => 'jenis-tim-sukses', 'middleware' => ['auth', 'admin']]
     Route::post('/ubah', [TimSuksesJenisController::class, 'update']);
     Route::get('/hapus/{id}', [TimSuksesJenisController::class, 'delete']);
 });
+// Master Partai
+Route::group(['prefix' => 'partai', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/', [PartaiController::class, 'index']);
+    Route::post('/get-by-id', [PartaiController::class, 'getById']);
+    Route::post('/tambah', [PartaiController::class, 'create']);
+    Route::post('/ubah', [PartaiController::class, 'update']);
+    Route::get('/hapus/{id}', [PartaiController::class, 'delete']);
+});
+// Master Calon
+Route::group(['prefix' => 'calon', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/{id}', [CalonController::class, 'index']);
+    Route::post('/get-by-id', [CalonController::class, 'getById']);
+    Route::post('/tambah', [CalonController::class, 'create']);
+    Route::post('/ubah', [CalonController::class, 'update']);
+    Route::get('/hapus/{id}', [CalonController::class, 'delete']);
+});
+
+
 
 // Data Umum
 Route::group(['prefix' => 'data-umum', 'middleware' => ['auth', 'admin']], function () {
@@ -145,24 +167,39 @@ Route::group(['prefix' => 'data-kunjungan', 'middleware' => ['auth', 'admin']], 
 });
 // Data Keluarga
 Route::group(['prefix' => 'data-keluarga', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/{id}', [DataKeluargaController::class, 'index']);
-    Route::post('/get-pemilih-by-desa', [DataKeluargaController::class, 'getPemilihByDesa']);
+    Route::get('/{id}/{jenis}', [DataKeluargaController::class, 'index']);
     Route::post('/ubah', [DataKeluargaController::class, 'update']);
     Route::get('/hapus/{id}', [DataKeluargaController::class, 'delete']);
 });
 // Data Simpatisan
 Route::group(['prefix' => 'data-simpatisan', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/{id}', [DataSimpatisanController::class, 'index']);
-    Route::post('/get-pemilih-by-desa', [DataSimpatisanController::class, 'getPemilihByDesa']);
     Route::post('/ubah', [DataSimpatisanController::class, 'update']);
     Route::get('/hapus/{id}', [DataSimpatisanController::class, 'delete']);
 });
 // Data Suara Abu-abu
 Route::group(['prefix' => 'data-suara-abu', 'middleware' => ['auth', 'admin']], function () {
-    Route::get('/{id}', [DataSuaraAbuController::class, 'index']);
-    Route::post('/get-pemilih-by-desa', [DataSuaraAbuController::class, 'getPemilihByDesa']);
+    Route::get('/{id}/{jenis}', [DataSuaraAbuController::class, 'index']);
     Route::post('/ubah', [DataSuaraAbuController::class, 'update']);
     Route::get('/hapus/{id}', [DataSuaraAbuController::class, 'delete']);
+});
+// Data Tim Sukses
+Route::group(['prefix' => 'data-tim-sukses', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/kabupaten/{id}/{jenis}', [DataTimSuksesController::class, 'kabupaten']);
+    Route::get('/kecamatan/{id}/{jenis}', [DataTimSuksesController::class, 'kecamatan']);
+    Route::get('/desa/{id}/{jenis}', [DataTimSuksesController::class, 'desa']);
+    Route::get('/tps/{id}/{jenis}', [DataTimSuksesController::class, 'tps']);
+    Route::post('/ubah', [DataTimSuksesController::class, 'update']);
+    Route::get('/hapus/{id}', [DataTimSuksesController::class, 'delete']);
+});
+// Data Saksi
+Route::group(['prefix' => 'data-saksi', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/kabupaten/{id}/{jenis}', [DataSaksiController::class, 'kabupaten']);
+    Route::get('/kecamatan/{id}/{jenis}', [DataSaksiController::class, 'kecamatan']);
+    Route::get('/desa/{id}/{jenis}', [DataSaksiController::class, 'desa']);
+    Route::get('/tps/{id}/{jenis}', [DataSaksiController::class, 'tps']);
+    Route::post('/ubah', [DataSaksiController::class, 'update']);
+    Route::get('/hapus/{id}', [DataSaksiController::class, 'delete']);
 });
 
 

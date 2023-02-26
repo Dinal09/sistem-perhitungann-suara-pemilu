@@ -28,11 +28,11 @@ class TypePemilih extends Model
 
     public function pemilih()
     {
-        return $this->belongsTo(Pemilih::class, 'id_pemilih', 'id');
+        return $this->belongsTo(Pemilih::class, 'id_pemilih', 'id_jenis');
     }
     public function jenisPemilih()
     {
-        return $this->hasOne(PemilihJenis::class, 'id', 'id_jenis_pemilih');
+        return $this->hasOne(PemilihJenis::class, 'id_jenis', 'id_pemilih_jenis');
     }
     public function suaraAbu()
     {

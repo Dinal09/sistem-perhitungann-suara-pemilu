@@ -10,40 +10,22 @@
                         {{ $explain }}</code>.
                     </p>
                     <div class="row">
-                        <div class="col-lg-6">
-                            <a href="#custom-modal-tambah" class="btn btn-primary btn-rounded waves-effect waves-light m-b-20"
-                                id="btn-tambah-pemilih">
+                        <div class="col-lg-8">
+                            <a href="#custom-modal-tambah" id="btn-tambah-calon"
+                                class="btn btn-primary btn-rounded waves-effect waves-light m-b-20">
                                 <span class="btn-label"><i class="fa fa-plus"></i></span>
                                 Tambah Data
                             </a>
                         </div>
-                        <div class="col-lg-2">
-                            <div class="form-group no-margin">
-                                <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_jenis"
-                                    id="filter-jenis">
-                                    <option value="all" <?= $params['jenis'] == 'all' ? 'selected' : '' ?>>Semua Jenis
-                                        @foreach ($jenisKeluarga as $jk)
-                                    <option value={{ $jk['id'] }}
-                                        <?= $params['jenis'] == $jk['id'] ? 'selected' : '' ?>>
-                                        {{ $jk['deskripsi'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
                         <div class="col-lg-4">
                             <div class="form-group no-margin">
-                                <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_desa"
-                                    id="filter-desa">
-                                    <option value="all" <?= $params['id'] == 'all' ? 'selected' : '' ?>>Semua Desa
+                                <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_dapil"
+                                    id="filter-dapil" required>
+                                    <option value="all" <?= $filter_id == 'all' ? 'selected' : '' ?>>Semua Partai
                                     </option>
-                                    <?php foreach($selectDesa as $dap): ?>
-                                    <optgroup label=" {{ $dap->nama }} ">
-                                        <?php foreach ($dap->desa as $des): ?>
-                                        <option value={{ $des->id }}
-                                            <?= $params['id'] == $des->id ? 'selected' : '' ?>>
-                                            {{ $des->nama }} </option>
-                                        <?php endforeach ?>
-                                    </optgroup>
+                                    <?php foreach($partai as $dap): ?>
+                                    <option value={{ $dap['id'] }} <?= $filter_id == $dap['id'] ? 'selected' : '' ?>>
+                                        {{ $dap['deskripsi'] }} </option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -54,10 +36,7 @@
                             <tr>
                                 <th>Aksi</th>
                                 <th>Nama</th>
-                                <th>NIK</th>
-                                <th>Alamat</th>
-                                <th>No HP</th>
-                                <th>Jenis</th>
+                                <th>Partai</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,16 +44,16 @@
                             <tr>
                                 <td>
                                     <div class="btn-group m-b-20">
-                                        <a href="/<?= $link ?>/hapus/{{ $d['type_id'] }}"
+                                        <button class="btn btn-info waves-effect btn-ubah" data-id="{{ $d['id'] }}"
+                                            data-toggle="modal" data-target="#modal-edit" title="Ubah Data"><i
+                                                class="ti-pencil-alt"></i></button>
+                                        <a href="/<?= $link ?>/hapus/{{ $d['id'] }}"
                                             class="btn btn-danger waves-effect ladda-button" data-style="slide-right"
                                             title="Hapus Data"><i class="ti-trash"></i></a>
                                     </div>
                                 </td>
                                 <td> {{ $d['nama'] }} </td>
-                                <td> {{ $d['no_nik'] }} </td>
-                                <td> {{ $d['alamat'] }} </td>
-                                <td> {{ $d['no_hp'] }} </td>
-                                <td> {{ $d['deskripsi'] }} </td>
+                                <td> {{ $d['partai_nama'] }} </td>
                             </tr>
                             <?php endforeach ?>
                         </tbody>
@@ -94,44 +73,16 @@
                     <h4 class="modal-title" id="myModalLabel">Tambah {{ $title }} </h4>
                 </div>
                 <div class="modal-body">
-                    <form action="/<?= $link ?>/ubah" method="POST">
+                    <form action="/<?= $link ?>/tambah" method="POST">
                         @csrf
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
+                                    <input type="hidden" name="id_partai" value="{{ $filter_id }}" id="id_calon_tambah">
                                     <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Pemilih</label>
-                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
-                                            name="id_pemilih" id="id_pemilih" required>
-                                            <option>--- Pilih Pemilih ---</option>
-                                            @foreach ($pemilih as $pem)
-                                                <?php
-                                                $nama = $pem['pemilih_nama'];
-                                                $keluarga = false;
-                                                if (count($pem['type_pemilih']) != 0) {
-                                                    $nama .= ' ( ';
-                                                    foreach ($pem['type_pemilih'] as $tp) {
-                                                        $nama .= $tp['jenis_pemilih']['deskripsi'] . ', ';
-                                                    }
-                                                    $nama .= ' )';
-                                                } ?>
-
-                                                <option value={{ $pem['id'] }}>
-                                                    {{ $nama }} </option>
-                                            @endforeach
-                                        </select>
-                                        <input type="hidden" name="id_desa" id="id_desa_tambah"
-                                            value="<?= $params['id'] ?>">
-                                    </div>
-                                    <div class="form-group no-margin">
-                                        <label for="field-7" class="control-label">Jenis Keluarga</label>
-                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
-                                            name="id_jenis" id="id_jenis" required>
-                                            <option>--- Pilih Jenis ---</option>
-                                            @foreach ($jenisKeluarga as $jk)
-                                                <option value={{ $jk['id'] }}>{{ $jk['deskripsi'] }}</option>
-                                            @endforeach
-                                        </select>
+                                        <label for="field-7" class="control-label">Nama {{ $title }} </label>
+                                        <textarea class="form-control autogrow" name="nama" placeholder="Masukkan Nama {{ $title }}"
+                                            style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -147,6 +98,53 @@
             </div>
         </div>
     </div><!-- /.modal -->
+
+    {{-- Modal Ubah --}}
+    <div id="modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Ubah {{ $title }} </h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/<?= $link ?>/ubah" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group no-margin">
+                                        <label for="field-7" class="control-label">Dapil</label>
+                                        <select class="selectpicker" data-live-search="true" data-style="btn-white"
+                                            name="id_partai" id="ubah-id_partai" required>
+                                            <option>--- Pilih Dapil ---</option>
+                                            <?php foreach($partai as $dap): ?>
+                                            <option value={{ $dap['id'] }}> {{ $dap['deskripsi'] }} </option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group no-margin">
+                                        <label for="field-7" class="control-label">Nama</label>
+                                        <input type="hidden" id="ubah-id" name="id">
+                                        <textarea class="form-control autogrow" name="nama" id="ubah-nama"
+                                            placeholder="Masukkan Nama {{ $title }}"
+                                            style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="ladda-button btn btn-primary" data-style="expand-left">
+                                Submit
+                            </button>
+                            <button type="button" class="btn btn-default waves-effect"
+                                data-dismiss="modal">Tutup</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -188,8 +186,10 @@
     <script src="{{ url('/ubold/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
 
+    <script src="{{ url('/ubold/assets/pages/jquery.form-advanced.init.js') }}"></script>
+
     <script src="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ url('/ubold/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.bootstrap.js') }}"></script>
 
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.buttons.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/buttons.bootstrap.min.js') }}"></script>
@@ -209,10 +209,6 @@
     <script src="{{ url('/ubold/assets/pages/datatables.init.js') }}"></script>
 
     <script type="text/javascript">
-        $('.select2').select2({
-            className: "form-control"
-        });
-
         $(document).ready(function() {
             $('#datatable').dataTable();
             $('#datatable-keytable').DataTable({
@@ -241,26 +237,43 @@
         });
         TableManageButtons.init();
 
-        $('#filter-desa').change(function() {
+        $('.btn-ubah').click(function() {
+            let id = $(this).data('id')
+
+            $.post('/calon/get-by-id?id=' + id, {
+                '_token': '{{ csrf_token() }}',
+                idJenis: id
+            }).done(function(output) {
+                let result = $.parseJSON(output);
+                if (result.kode == 200) {
+                    $.Notification.autoHideNotify('success', 'top right', 'Berhasil...!!',
+                        result.pesan
+                    )
+
+                    $('#ubah-nama').val(result.data.nama)
+                    $('#ubah-id_partai').val(result.data.partai_id).trigger('change')
+                    $('#ubah-id').val(result.data.id)
+                } else {
+                    $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
+                        result.pesan
+                    )
+                }
+            })
+        })
+
+        $('#filter-dapil').change(function() {
             let id = $(this).val()
-            let jenis = $('#filter-jenis').val()
 
-            window.location.href = '/data-keluarga/' + id + '/' + jenis
-        })
-        $('#filter-jenis').change(function() {
-            let id = $('#filter-desa').val()
-            let jenis = $(this).val()
-
-            window.location.href = '/data-keluarga/' + id + '/' + jenis
+            window.location.href = '/calon/' + id
         })
 
-        $('#btn-tambah-pemilih').click(function(event) {
+        $('#btn-tambah-calon').click(function(event) {
             event.preventDefault();
 
-            let id_desa = $('#id_desa_tambah').val()
+            let id_desa = $('#id_calon_tambah').val()
             if (id_desa == 'all') {
                 $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
-                    "Pilih Desa Terlebih Dahulu Sebelum Menambah Pemilih"
+                    "Pilih Partai Terlebih Dahulu Sebelum Menambah Pemilih"
                 )
             } else {
                 $('#modal-tambah').modal('show')

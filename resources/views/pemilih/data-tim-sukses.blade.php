@@ -22,29 +22,39 @@
                                 <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_jenis"
                                     id="filter-jenis">
                                     <option value="all" <?= $params['jenis'] == 'all' ? 'selected' : '' ?>>Semua Jenis
-                                        @foreach ($jenisKeluarga as $jk)
+                                        @foreach ($timSukses as $jk)
                                     <option value={{ $jk['id'] }}
                                         <?= $params['jenis'] == $jk['id'] ? 'selected' : '' ?>>
                                         {{ $jk['deskripsi'] }}</option>
                                     @endforeach
+
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group no-margin">
                                 <select class="selectpicker" data-live-search="true" data-style="btn-white" name="id_desa"
-                                    id="filter-desa">
-                                    <option value="all" <?= $params['id'] == 'all' ? 'selected' : '' ?>>Semua Desa
+                                    id="filter-desa" required>
+                                    <option value="all" <?= $params['id'] == 'all' ? 'selected' : '' ?>>Semua
+                                        {{ ucfirst($tingkat) }}
                                     </option>
-                                    <?php foreach($selectDesa as $dap): ?>
-                                    <optgroup label=" {{ $dap->nama }} ">
-                                        <?php foreach ($dap->desa as $des): ?>
-                                        <option value={{ $des->id }}
-                                            <?= $params['id'] == $des->id ? 'selected' : '' ?>>
-                                            {{ $des->nama }} </option>
-                                        <?php endforeach ?>
-                                    </optgroup>
-                                    <?php endforeach ?>
+                                    @if ($tingkat != 'tps')
+                                        @foreach ($dataFilter as $dap)
+                                            <option value={{ $dap->id }}
+                                                <?= $params['id'] == $dap->id ? 'selected' : '' ?>>
+                                                {{ $dap->nama }} </option>
+                                        @endforeach
+                                    @else
+                                        @foreach ($dataFilter as $dap)
+                                            <optgroup label=" {{ $dap->nama }} ">
+                                                @foreach ($dap->tps as $des)
+                                                    <option value={{ $des->id }}
+                                                        <?= $params['id'] == $des->id ? 'selected' : '' ?>>
+                                                        {{ $des->nama }} </option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -106,14 +116,13 @@
                                             <option>--- Pilih Pemilih ---</option>
                                             @foreach ($pemilih as $pem)
                                                 <?php
-                                                $nama = $pem['pemilih_nama'];
+                                                $nama = $pem['pemilih_nama'] . ' | ' . $pem['desa_nama'];
                                                 $keluarga = false;
                                                 if (count($pem['type_pemilih']) != 0) {
-                                                    $nama .= ' ( ';
+                                                    $nama .= ' | ';
                                                     foreach ($pem['type_pemilih'] as $tp) {
-                                                        $nama .= $tp['jenis_pemilih']['deskripsi'] . ', ';
+                                                        $nama .= $tp['jenis_pemilih']['deskripsi'] . ($tp['tingkat'] != '-' ? ' ' . $tp['tingkat'] : '') . ', ';
                                                     }
-                                                    $nama .= ' )';
                                                 } ?>
 
                                                 <option value={{ $pem['id'] }}>
@@ -123,14 +132,16 @@
                                         <input type="hidden" name="id_desa" id="id_desa_tambah"
                                             value="<?= $params['id'] ?>">
                                     </div>
+                                    <input type="hidden" name="tingkat" value="{{ $tingkat }}">
+                                    <input type="hidden" name="id_tingkat" value="{{ $params['id'] }}">
                                     <div class="form-group no-margin">
                                         <label for="field-7" class="control-label">Jenis Keluarga</label>
                                         <select class="selectpicker" data-live-search="true" data-style="btn-white"
                                             name="id_jenis" id="id_jenis" required>
                                             <option>--- Pilih Jenis ---</option>
-                                            @foreach ($jenisKeluarga as $jk)
-                                                <option value={{ $jk['id'] }}>{{ $jk['deskripsi'] }}</option>
-                                            @endforeach
+                                            <?php foreach($timSukses as $j): ?>
+                                            <option value={{ $j['id'] }}> {{ $j['deskripsi'] }} </option>
+                                            <?php endforeach ?>
                                         </select>
                                     </div>
                                 </div>
@@ -189,7 +200,7 @@
     <script src="{{ url('/ubold/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js') }}"></script>
 
     <script src="{{ url('/ubold/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ url('/ubold/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js') }}"></script>
+    <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.bootstrap.js') }}"></script>
 
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.buttons.min.js') }}"></script>
     <script src="{{ url('/ubold/assets/plugins/datatables/buttons.bootstrap.min.js') }}"></script>
@@ -207,12 +218,9 @@
     <script src="{{ url('/ubold/assets/plugins/datatables/dataTables.fixedColumns.min.js') }}"></script>
 
     <script src="{{ url('/ubold/assets/pages/datatables.init.js') }}"></script>
+    <script type="text/javascript" src="{{ url('/ubold/assets/pages/jquery.form-advanced.init.js') }}"></script>
 
     <script type="text/javascript">
-        $('.select2').select2({
-            className: "form-control"
-        });
-
         $(document).ready(function() {
             $('#datatable').dataTable();
             $('#datatable-keytable').DataTable({
@@ -244,23 +252,25 @@
         $('#filter-desa').change(function() {
             let id = $(this).val()
             let jenis = $('#filter-jenis').val()
+            let tingkat = '{{ $tingkat }}'
 
-            window.location.href = '/data-keluarga/' + id + '/' + jenis
+            window.location.href = '/data-tim-sukses/' + tingkat + '/' + id + '/' + jenis
         })
         $('#filter-jenis').change(function() {
             let id = $('#filter-desa').val()
             let jenis = $(this).val()
+            let tingkat = '{{ $tingkat }}'
 
-            window.location.href = '/data-keluarga/' + id + '/' + jenis
+            window.location.href = '/data-tim-sukses/' + tingkat + '/' + id + '/' + jenis
         })
 
         $('#btn-tambah-pemilih').click(function(event) {
             event.preventDefault();
-
+            let tingkat = '{{ ucfirst($tingkat) }}'
             let id_desa = $('#id_desa_tambah').val()
             if (id_desa == 'all') {
                 $.Notification.autoHideNotify('warning', 'top right', 'Perhatian...!!',
-                    "Pilih Desa Terlebih Dahulu Sebelum Menambah Pemilih"
+                    'Pilih ' + tingkat + ' Terlebih Dahulu Sebelum Menambah Pemilih'
                 )
             } else {
                 $('#modal-tambah').modal('show')

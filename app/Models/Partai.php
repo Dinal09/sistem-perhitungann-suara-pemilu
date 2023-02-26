@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PemilihJenis extends Model
+class Partai extends Model
 {
     use HasFactory;
-    protected $table = 'pemilih_jenis';
-    protected $primary = 'id_jenis';
+    protected $table = 'partai';
+    protected $primary = 'id';
     protected $fillable = [
         'deskripsi',
         'created_at',
@@ -17,8 +17,8 @@ class PemilihJenis extends Model
     ];
     public $timestamp = TRUE;
 
-    public function typePemilih()
+    public function Calon()
     {
-        return $this->belongsTo(TypePemilih::class, 'id_jenis_pemilih', 'id_jenis');
+        return $this->hasMany(Calon::class, 'id_partai', 'id');
     }
 }
